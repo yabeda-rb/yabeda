@@ -1,0 +1,46 @@
+---
+require:
+- rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 2.3
+
+Metrics/BlockLength:
+  Exclude:
+  - "Gemfile"
+  - "spec/**/*"
+
+Style/BracesAroundHashParameters:
+  EnforcedStyle: context_dependent
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+# Allow to use let!
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+Bundler/OrderedGems:
+  Enabled: false
+
+Style/TrailingCommaInArguments:
+  Description: 'Checks for trailing comma in argument lists.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-trailing-params-comma'
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInArrayLiteral:
+  Description: 'Checks for trailing comma in array literals.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-trailing-array-commas'
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  Description: 'Checks for trailing comma in hash literals.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-trailing-array-commas'
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
+
