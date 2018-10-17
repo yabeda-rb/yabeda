@@ -2,11 +2,11 @@
 
 lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "evil/metrics/version"
+require "yabeda/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "evil-metrics"
-  spec.version       = Evil::Metrics::VERSION
+  spec.name          = "yabeda"
+  spec.version       = Yabeda::VERSION
   spec.authors       = ["Andrey Novikov"]
   spec.email         = ["envek@envek.name"]
 
@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
     Collect statistics about how your application is performing with ease. \
     Export metrics to various monitoring systems.
   DESCRIPTION
-  spec.homepage      = "https://github.com/evil-metrics/evil-metrics"
+  spec.homepage      = "https://github.com/yabeda-rb/yabeda"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|

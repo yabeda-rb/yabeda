@@ -1,4 +1,4 @@
-# Evil::Metrics
+# Yabeda
 
 **This software is Work in Progress: features will appear and disappear, API will be changed, your feedback is always welcome!** 
 
@@ -9,9 +9,9 @@ Extensible solution for easy setup of monitoring in your Ruby apps.
 Most of the time you don't need to add this gem to your Gemfile directly (unless you're only collecting your custom metrics):
 
 ```ruby
-gem 'evil-metrics'
+gem 'yabeda'
 # Then add monitoring system adapter, e.g.:
-# gem 'evil-metrics-prometheus'
+# gem 'yabeda-prometheus'
 ```
 
 And then execute:
@@ -23,7 +23,7 @@ And then execute:
  1. Declare your metrics:
 
     ```ruby
-    Evil::Metrics.configure do
+    Yabeda.configure do
       group :your_app
     
       counter   :bells_rang_count, "Total number of bells being rang"
@@ -38,11 +38,11 @@ And then execute:
     def ring_the_bell(id)
       bell = Bell.find(id)
       bell.ring!
-      Evil::Metrics.your_app_bells_rang_count.increment({bell_size: bell.size}, by: 1)
+      Yabeda.your_app_bells_rang_count.increment({bell_size: bell.size}, by: 1)
     end
 
     def whistle!
-      Evil::Metrics.your_app_whistle_runtime.measure do
+      Yabeda.your_app_whistle_runtime.measure do
         # Run your code
       end
     end
@@ -50,7 +50,7 @@ And then execute:
     
  3. Setup collecting of metrics that do not tied to specific events in you application. E.g.: reporting your app's current state
     ```ruby
-    Evil::Metrics.configure do
+    Yabeda.configure do
       # This block will be executed periodically few times in a minute
       # (by timer or external request depending on adapter you're using) 
       # Keep it fast and simple!
@@ -93,7 +93,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/evil-metrics/evil-metrics.
+Bug reports and pull requests are welcome on GitHub at https://github.com/yabeda-rb/yabeda.
 
 ## License
 
