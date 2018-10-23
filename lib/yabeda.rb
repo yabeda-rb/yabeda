@@ -8,11 +8,19 @@ require "yabeda/dsl"
 module Yabeda
   include DSL
 
-  cattr_reader :metrics,    default: Concurrent::Hash.new
-  cattr_reader :adapters,   default: Concurrent::Hash.new
-  cattr_reader :collectors, default: Concurrent::Array.new
-
   class << self
+    def metrics
+      @metrics ||= Concurrent::Hash.new
+    end
+
+    def adapters
+      @adapters ||= Concurrent::Hash.new
+    end
+
+    def collectors
+      @collectors ||= Concurrent::Array.new
+    end
+ 
     # @param [Symbol] name
     # @param [BaseAdapter] instance
     def register_adapter(name, instance)
