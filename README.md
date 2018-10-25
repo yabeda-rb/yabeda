@@ -1,8 +1,16 @@
 # Yabeda
 
+[![Gem Version](https://badge.fury.io/rb/yabeda.svg)](https://rubygems.org/gems/yabeda) [![Build Status](https://travis-ci.org/yabeda-rb/yabeda.svg?branch=master)](https://travis-ci.org/yabeda-rb/yabeda)
+
 **This software is Work in Progress: features will appear and disappear, API will be changed, your feedback is always welcome!** 
 
-Extensible solution for easy setup of monitoring in your Ruby apps.
+Extendable solution for easy setup of monitoring in your Ruby apps.
+
+<a href="https://evilmartians.com/?utm_source=yabeda&utm_campaign=project_page">
+<img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg" alt="Sponsored by Evil Martians" width="236" height="54">
+</a>
+
+> Read more about Yabeda and the reasoning behind it in Martian Chronicles: [“Meet Yabeda: Modular framework for instrumenting Ruby applications”](https://evilmartians.com/chronicles/meet-yabeda-modular-framework-for-instrumenting-ruby-applications)
 
 ## Installation
 
