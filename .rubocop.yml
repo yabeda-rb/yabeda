@@ -10,6 +10,9 @@ Metrics/BlockLength:
   - "Gemfile"
   - "spec/**/*"
 
+Metrics/LineLength:
+  Max: 120
+
 Style/BracesAroundHashParameters:
   EnforcedStyle: context_dependent
 

@@ -5,9 +5,9 @@ RSpec.describe Yabeda do
     expect(Yabeda::VERSION).not_to be nil
   end
 
-  it 'exposes the public api' do
-    expect(Yabeda.metrics).to eq({})
-    expect(Yabeda.adapters).to eq({})
-    expect(Yabeda.collectors).to eq([])
+  it "exposes the public api" do
+    expect(described_class.metrics).to eq({})
+    expect(described_class.adapters).to eq({})
+    expect(described_class.collectors).to eq([])
   end
 end

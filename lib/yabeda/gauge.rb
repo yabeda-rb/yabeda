@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Yabeda
-  # Arbitrary value
+  # Arbitrary value, can be changed in both sides
   class Gauge < Metric
     def set(tags, value)
       values[tags] = value

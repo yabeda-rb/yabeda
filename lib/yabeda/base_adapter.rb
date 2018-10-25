@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Yabeda
+  # Base class for adapters to particular monitoring systems
   class BaseAdapter
     def register!(metric)
       case metric
