@@ -34,9 +34,9 @@ And then execute:
     Yabeda.configure do
       group :your_app
     
-      counter   :bells_rang_count, "Total number of bells being rang"
-      gauge     :whistles_active,  "Number of whistles ready to whistle"
-      histogram :whistle_runtime,  "How long whistles are being active", unit: :seconds
+      counter   :bells_rang_count, comment: "Total number of bells being rang"
+      gauge     :whistles_active,  comment: "Number of whistles ready to whistle"
+      histogram :whistle_runtime,  comment: "How long whistles are being active", unit: :seconds
     end
     ```
     
