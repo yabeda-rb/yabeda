@@ -15,6 +15,11 @@ module Yabeda
       @metrics ||= Concurrent::Hash.new
     end
 
+    # @return [Hash<String, Yabeda::Group>] All registered metrics
+    def groups
+      @groups ||= Concurrent::Hash.new
+    end
+
     # @return [Hash<String, Yabeda::BaseAdapter>] All loaded adapters
     def adapters
       @adapters ||= Concurrent::Hash.new
