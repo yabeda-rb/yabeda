@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/yabeda.svg)](https://rubygems.org/gems/yabeda) [![Build Status](https://travis-ci.org/yabeda-rb/yabeda.svg?branch=master)](https://travis-ci.org/yabeda-rb/yabeda)
 
-**This software is Work in Progress: features will appear and disappear, API will be changed, your feedback is always welcome!** 
+**This software is Work in Progress: features will appear and disappear, API will be changed, your feedback is always welcome!**
 
 Extendable solution for easy setup of monitoring in your Ruby apps.
 
@@ -32,35 +32,38 @@ And then execute:
 
     ```ruby
     Yabeda.configure do
-      group :your_app
-    
-      counter   :bells_rang_count, comment: "Total number of bells being rang"
-      gauge     :whistles_active,  comment: "Number of whistles ready to whistle"
-      histogram :whistle_runtime,  comment: "How long whistles are being active", unit: :seconds
+      group :your_app do
+        counter   :bells_rang_count, comment: "Total number of bells being rang"
+        gauge     :whistles_active,  comment: "Number of whistles ready to whistle"
+        histogram :whistle_runtime do
+          comment "How long whistles are being active"
+          unit :seconds
+        end
+      end
     end
     ```
-    
+
  2. Access metric in your app and use it!
- 
+
     ```ruby
     def ring_the_bell(id)
       bell = Bell.find(id)
       bell.ring!
-      Yabeda.your_app_bells_rang_count.increment({bell_size: bell.size}, by: 1)
+      Yabeda.your_app.bells_rang_count.increment({bell_size: bell.size}, by: 1)
     end
 
     def whistle!
-      Yabeda.your_app_whistle_runtime.measure do
+      Yabeda.your_app.whistle_runtime.measure do
         # Run your code
       end
     end
     ```
-    
+
  3. Setup collecting of metrics that do not tied to specific events in you application. E.g.: reporting your app's current state
     ```ruby
     Yabeda.configure do
       # This block will be executed periodically few times in a minute
-      # (by timer or external request depending on adapter you're using) 
+      # (by timer or external request depending on adapter you're using)
       # Keep it fast and simple!
       collect do
         your_app_whistles_active.set({}, Whistle.where(state: :active).count
@@ -74,7 +77,7 @@ And then execute:
 ## Roadmap (aka TODO or Help wanted)
 
  - Ability to change metric settings for individual adapters
- 
+
    ```rb
    histogram :foo, comment: "say what?" do
      adapter :prometheus do
@@ -82,9 +85,9 @@ And then execute:
      end
    end
    ```
-   
+
  - Ability to route some metrics only for given adapter:
- 
+
    ```rb
    adapter :prometheus do
      include_group :sidekiq
