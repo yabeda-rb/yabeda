@@ -66,7 +66,7 @@ And then execute:
       # (by timer or external request depending on adapter you're using)
       # Keep it fast and simple!
       collect do
-        your_app_whistles_active.set({}, Whistle.where(state: :active).count
+        your_app_whistles_active.set({}, Whistle.where(state: :active).count)
       end
     end
     ```
