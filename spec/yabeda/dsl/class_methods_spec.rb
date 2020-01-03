@@ -106,4 +106,16 @@ RSpec.describe Yabeda::DSL::ClassMethods do
       it("defines method on root object") { is_expected.to be_a(Yabeda::Histogram) }
     end
   end
+
+  describe ".general_tag" do
+    subject { Yabeda.general_tags }
+
+    context 'when general tag configured' do
+      before do
+        Yabeda.configure { general_tag :environment, 'test' }
+      end
+
+      it { is_expected.to eq({ environment: 'test' }) }
+    end
+  end
 end

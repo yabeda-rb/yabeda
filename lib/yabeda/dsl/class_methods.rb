@@ -53,6 +53,14 @@ module Yabeda
         register_metric(metric)
       end
 
+      # Add general tag for all metric
+      #
+      # @param name [Symbol] Name of general tag
+      # @param value [String] Value of general tag
+      def general_tag(name, value)
+        ::Yabeda.general_tags[name] = value
+      end
+
       private
 
       def register_metric(metric)

@@ -4,6 +4,7 @@ require "concurrent"
 
 require "yabeda/version"
 require "yabeda/dsl"
+require "yabeda/tags"
 
 # Extendable framework for collecting and exporting metrics from Ruby apps
 module Yabeda
@@ -28,6 +29,11 @@ module Yabeda
     # @return [Array<Proc>] All collectors for periodical retrieving of metrics
     def collectors
       @collectors ||= Concurrent::Array.new
+    end
+
+    # @return [Hash<Symbol, Symbol>] All added general tags
+    def general_tags
+      @general_tags ||= Concurrent::Hash.new
     end
 
     # @param [Symbol] name
