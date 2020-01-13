@@ -71,8 +71,15 @@ And then execute:
     end
     ```
 
-  4. See the docs for the adapter you're using
-  5. Enjoy!
+  4. Setup general tags what will be added to all metrics
+    ```ruby
+    Yabeda.configure do
+      general_tag :rails_environment, 'production'
+    end
+    ```
+
+  5. See the docs for the adapter you're using
+  6. Enjoy!
 
 ## Roadmap (aka TODO or Help wanted)
 
