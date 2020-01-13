@@ -9,5 +9,6 @@ RSpec.describe Yabeda do
     expect(described_class.metrics).to eq({})
     expect(described_class.adapters).to eq({})
     expect(described_class.collectors).to eq([])
+    expect(described_class.general_tags).to eq({})
   end
 end
