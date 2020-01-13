@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
 RSpec.describe Yabeda::DSL::MetricBuilder do
-  class TestMetric < Yabeda::Metric
-    option :required_option
-  end
-
   subject(:metric) do
-    described_class.new(TestMetric).build(args, kwargs, group, &block)
+    described_class.new(test_metric_class).build(args, kwargs, group, &block)
   end
 
   let(:args) { [:test_metric] }
   let(:kwargs) { { required_option: "value" } }
   let(:group) { nil }
   let(:block) { proc {} }
+  let(:test_metric_class) do
+    Class.new(Yabeda::Metric) do
+      option :required_option
+    end
+  end
 
   context "when required option is not provided" do
     let(:kwargs) { {} }
@@ -20,7 +21,7 @@ RSpec.describe Yabeda::DSL::MetricBuilder do
     it "raises error" do
       expect { metric }.to raise_error(
         Yabeda::ConfigurationError,
-        /option 'required_option' is required for TestMetric/,
+        /option 'required_option' is required/,
       )
     end
   end
@@ -31,7 +32,7 @@ RSpec.describe Yabeda::DSL::MetricBuilder do
     it "raises error" do
       expect { metric }.to raise_error(
         Yabeda::ConfigurationError,
-        /option 'buckets' is not available for TestMetric/,
+        /option 'buckets' is not available/,
       )
     end
   end

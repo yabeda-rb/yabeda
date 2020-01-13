@@ -21,8 +21,8 @@ module Yabeda
 
       def initialize_metric(params, options, group)
         metric_klass.new(*params, **options, group: group)
-      rescue KeyError => error
-        raise ConfigurationError, "#{error.message} for #{metric_klass.name}"
+      rescue KeyError => e
+        raise ConfigurationError, "#{e.message} for #{metric_klass.name}"
       end
     end
   end
