@@ -110,12 +110,12 @@ RSpec.describe Yabeda::DSL::ClassMethods do
   describe ".default_tag" do
     subject { Yabeda.default_tags }
 
-    context 'when default tag configured' do
+    context "when default tag configured" do
       before do
-        Yabeda.configure { default_tag :environment, 'test' }
+        Yabeda.configure { default_tag :environment, "test" }
       end
 
-      it { is_expected.to eq({ environment: 'test' }) }
+      it { is_expected.to eq(environment: "test") }
     end
   end
 end

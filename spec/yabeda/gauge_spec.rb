@@ -3,13 +3,13 @@
 RSpec.describe Yabeda::Gauge do
   subject(:set_gauge) { gauge.set(tags, metric_value) }
 
-  let(:tags) { { foo: 'bar' } }
+  let(:tags) { { foo: "bar" } }
   let(:metric_value) { 10 }
   let(:gauge) { ::Yabeda.test_gauge }
-  let(:built_tags) { { built_foo: 'built_bar' } }
-  let(:adapter) { instance_double('Yabeda::BaseAdapter', perform_gauge_set!: true, register!: true) }
+  let(:built_tags) { { built_foo: "built_bar" } }
+  let(:adapter) { instance_double("Yabeda::BaseAdapter", perform_gauge_set!: true, register!: true) }
 
-  before(:each) do
+  before do
     ::Yabeda.configure do
       gauge :test_gauge
     end
@@ -24,7 +24,7 @@ RSpec.describe Yabeda::Gauge do
 
   it { expect(set_gauge).to eq(metric_value) }
 
-  it 'execute perform_gauge_set! method of adapter' do
+  it "execute perform_gauge_set! method of adapter" do
     set_gauge
     expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value)
   end

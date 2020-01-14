@@ -3,11 +3,11 @@
 RSpec.describe Yabeda::Histogram do
   subject(:measure_histogram) { histogram.measure(tags, metric_value) }
 
-  let(:tags) { { foo: 'bar' } }
+  let(:tags) { { foo: "bar" } }
   let(:metric_value) { 10 }
   let(:histogram) { ::Yabeda.test_histogram }
-  let(:built_tags) { { built_foo: 'built_bar' } }
-  let(:adapter) { instance_double('Yabeda::BaseAdapter', perform_histogram_measure!: true, register!: true) }
+  let(:built_tags) { { built_foo: "built_bar" } }
+  let(:adapter) { instance_double("Yabeda::BaseAdapter", perform_histogram_measure!: true, register!: true) }
 
   before do
     ::Yabeda.configure do
@@ -23,7 +23,8 @@ RSpec.describe Yabeda::Histogram do
   end
 
   it { is_expected.to eq(metric_value) }
-  it 'execute perform_histogram_measure! method of adapter' do
+
+  it "execute perform_histogram_measure! method of adapter" do
     measure_histogram
     expect(adapter).to have_received(:perform_histogram_measure!).with(histogram, built_tags, metric_value)
   end
