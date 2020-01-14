@@ -33,7 +33,7 @@ And then execute:
     ```ruby
     Yabeda.configure do
       group :your_app do
-        counter   :bells_rang_count, comment: "Total number of bells being rang"
+        counter   :bells_rang_count, comment: "Total number of bells being rang", tags: %i[bell_size]
         gauge     :whistles_active,  comment: "Number of whistles ready to whistle"
         histogram :whistle_runtime do
           comment "How long whistles are being active"

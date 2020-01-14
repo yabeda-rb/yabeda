@@ -9,6 +9,7 @@ module Yabeda
 
     param  :name,                    comment: "Metric name. Use snake_case. E.g. job_runtime"
     option :comment, optional: true, comment: "Documentation string. Required by some adapters."
+    option :tags,    optional: true, comment: "Allowed labels to be set. Required by some adapters."
     option :unit,    optional: true, comment: "In which units it is measured. E.g. `seconds`"
     option :per,     optional: true, comment: "Per which unit is measured `unit`. E.g. `call` as in seconds per call"
     option :group,   optional: true, comment: "Category name for grouping metrics"
