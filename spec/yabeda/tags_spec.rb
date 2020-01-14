@@ -22,5 +22,15 @@ RSpec.describe Yabeda::Tags do
 
       it { is_expected.to eq({ environment: 'test', controller: 'foo' }) }
     end
+
+    context 'when default tags and passing tags the same' do
+      before do
+        Yabeda.configure do
+          default_tag :controller, 'default'
+        end
+      end
+
+      it { is_expected.to eq({ controller: 'foo' }) }
+    end
   end
 end
