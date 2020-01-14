@@ -71,10 +71,10 @@ And then execute:
     end
     ```
 
-  4. Setup general tags what will be added to all metrics
+  4. Setup default tags what will be added to all metrics
     ```ruby
     Yabeda.configure do
-      general_tag :rails_environment, 'production'
+      default_tag :rails_environment, 'production'
     end
     ```
 

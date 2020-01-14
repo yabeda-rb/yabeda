@@ -6,17 +6,17 @@ RSpec.describe Yabeda::Tags do
 
     let(:tags) { { controller: 'foo' } }
 
-    context 'when general tags are not set' do
+    context 'when default tags are not set' do
       before do
-        Yabeda.general_tags.clear     
+        Yabeda.default_tags.clear
       end
       it { is_expected.to eq({ controller: 'foo' }) }
     end
 
-    context 'when general tags are set' do
+    context 'when default tags are set' do
       before do
         Yabeda.configure do
-          general_tag :environment, 'test'
+          default_tag :environment, 'test'
         end
       end
 

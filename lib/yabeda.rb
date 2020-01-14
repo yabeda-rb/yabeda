@@ -31,9 +31,9 @@ module Yabeda
       @collectors ||= Concurrent::Array.new
     end
 
-    # @return [Hash<Symbol, Symbol>] All added general tags
-    def general_tags
-      @general_tags ||= Concurrent::Hash.new
+    # @return [Hash<Symbol, Symbol>] All added default tags
+    def default_tags
+      @default_tags ||= Concurrent::Hash.new
     end
 
     # @param [Symbol] name

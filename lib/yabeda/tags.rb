@@ -4,7 +4,7 @@ module Yabeda
   # Class to merge tags
   class Tags
     def self.build(tags)
-      ::Yabeda.general_tags.merge(tags)
+      ::Yabeda.default_tags.merge(tags)
     end
   end
 end
