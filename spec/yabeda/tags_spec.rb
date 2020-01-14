@@ -6,11 +6,11 @@ RSpec.describe Yabeda::Tags do
 
     let(:tags) { { controller: "foo" } }
 
-    context "when default tags are not set" do
-      before do
-        Yabeda.default_tags.clear
-      end
+    after do
+      ::Yabeda.default_tags.clear
+    end
 
+    context "when default tags are not set" do
       it { is_expected.to eq(controller: "foo") }
     end
 

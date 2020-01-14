@@ -15,6 +15,8 @@ RSpec.describe Yabeda::DSL::ClassMethods do
       end
       Yabeda.remove_instance_variable(:@metrics)
     end
+
+    ::Yabeda.default_tags.clear
   end
 
   describe ".group" do
