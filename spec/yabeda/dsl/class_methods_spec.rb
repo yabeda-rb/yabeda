@@ -15,6 +15,8 @@ RSpec.describe Yabeda::DSL::ClassMethods do
       end
       Yabeda.remove_instance_variable(:@metrics)
     end
+
+    ::Yabeda.default_tags.clear
   end
 
   describe ".group" do
@@ -104,6 +106,18 @@ RSpec.describe Yabeda::DSL::ClassMethods do
       end
 
       it("defines method on root object") { is_expected.to be_a(Yabeda::Histogram) }
+    end
+  end
+
+  describe ".default_tag" do
+    subject { Yabeda.default_tags }
+
+    context "when default tag configured" do
+      before do
+        Yabeda.configure { default_tag :environment, "test" }
+      end
+
+      it { is_expected.to eq(environment: "test") }
     end
   end
 end
