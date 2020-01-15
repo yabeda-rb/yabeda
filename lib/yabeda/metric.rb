@@ -22,5 +22,9 @@ module Yabeda
     def values
       @values ||= Concurrent::Hash.new
     end
+
+    def tags
+      (Yabeda.default_tags.keys + Array(super)).uniq
+    end
   end
 end
