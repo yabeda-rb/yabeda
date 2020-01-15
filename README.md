@@ -71,12 +71,12 @@ And then execute:
     end
     ```
 
-  4. Setup default tags what will be added to all metrics
-    ```ruby
-    Yabeda.configure do
-      default_tag :rails_environment, 'production'
-    end
-    ```
+  4. _Optionally_ setup default tags that will be added to all metrics
+     ```ruby
+     Yabeda.configure do
+       default_tag :rails_environment, 'production'
+     end
+     ```
 
   5. See the docs for the adapter you're using
   6. Enjoy!
