@@ -23,6 +23,7 @@ RSpec.describe Yabeda::Metric do
           default_tag :bar, "test"
           default_tag :baz, "qux"
         end
+        Yabeda.configure!
       end
 
       it { is_expected.to match_array(%i[foo bar baz]) }

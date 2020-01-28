@@ -15,6 +15,7 @@ RSpec.describe Yabeda::Tags do
         Yabeda.configure do
           default_tag :environment, "test"
         end
+        Yabeda.configure!
       end
 
       it { is_expected.to eq(environment: "test", controller: "foo") }
@@ -25,6 +26,7 @@ RSpec.describe Yabeda::Tags do
         Yabeda.configure do
           default_tag :controller, "default"
         end
+        Yabeda.configure!
       end
 
       it { is_expected.to eq(controller: "foo") }

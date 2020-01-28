@@ -13,6 +13,7 @@ RSpec.describe Yabeda::Histogram do
     ::Yabeda.configure do
       histogram :test_histogram, buckets: [1, 10, 100]
     end
+    Yabeda.configure!
     allow(Yabeda::Tags).to receive(:build).with(tags).and_return(built_tags)
     ::Yabeda.register_adapter(:test_adapter, adapter)
   end

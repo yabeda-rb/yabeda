@@ -14,7 +14,8 @@ module Yabeda
     module ClassMethods
       # Block for grouping and simplifying configuration of related metrics
       def configure(&block)
-        class_exec(&block)
+        Yabeda.configurators.push([@group, block])
+        class_exec(&block) if Yabeda.configured?
         @group = nil
       end
 

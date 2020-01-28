@@ -29,6 +29,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
           group :group2
           histogram :test_histogram, buckets: [1, 10, 100]
         end
+        Yabeda.configure!
       end
 
       it "defines metric method on the root object" do
@@ -53,6 +54,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
           group(:group1) { gauge(:test_gauge) }
           histogram(:test_histogram, buckets: [1, 10, 100])
         end
+        Yabeda.configure!
       end
 
       it "defines metric method on the root object" do
@@ -79,6 +81,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
     context "when properly configured" do
       before do
         Yabeda.configure { counter(:test_counter) }
+        Yabeda.configure!
       end
 
       it("defines method on root object") { is_expected.to be_a(Yabeda::Counter) }
@@ -91,6 +94,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
     context "when properly configured" do
       before do
         Yabeda.configure { gauge(:test_gauge) }
+        Yabeda.configure!
       end
 
       it("defines method on root object") { is_expected.to be_a(Yabeda::Gauge) }
@@ -103,6 +107,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
     context "when properly configured" do
       before do
         Yabeda.configure { histogram(:test_histogram, buckets: [1, 10, 100]) }
+        Yabeda.configure!
       end
 
       it("defines method on root object") { is_expected.to be_a(Yabeda::Histogram) }
@@ -115,6 +120,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
     context "when default tag configured" do
       before do
         Yabeda.configure { default_tag :environment, "test" }
+        Yabeda.configure!
       end
 
       it { is_expected.to eq(environment: "test") }

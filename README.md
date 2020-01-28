@@ -43,7 +43,15 @@ And then execute:
     end
     ```
 
- 2. Access metric in your app and use it!
+ 2. After your application was initialized and all metrics was declared, you need to apply Yabeda configuration:
+
+    ```ruby
+    Yabeda.configure!
+    ```
+
+    _But [yabeda-rails] will do this for you automatically._
+
+ 3. Access metric in your app and use it!
 
     ```ruby
     def ring_the_bell(id)
@@ -59,7 +67,7 @@ And then execute:
     end
     ```
 
- 3. Setup collecting of metrics that do not tied to specific events in you application. E.g.: reporting your app's current state
+ 4. Setup collecting of metrics that do not tied to specific events in you application. E.g.: reporting your app's current state
     ```ruby
     Yabeda.configure do
       # This block will be executed periodically few times in a minute
@@ -71,15 +79,15 @@ And then execute:
     end
     ```
 
-  4. _Optionally_ setup default tags that will be added to all metrics
+  5. _Optionally_ setup default tags that will be added to all metrics
      ```ruby
      Yabeda.configure do
        default_tag :rails_environment, 'production'
      end
      ```
 
-  5. See the docs for the adapter you're using
-  6. Enjoy!
+  6. See the docs for the adapter you're using
+  7. Enjoy!
 
 ## Roadmap (aka TODO or Help wanted)
 
@@ -116,3 +124,5 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/yabeda
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+[yabeda-rails]: https://github.com/yabeda-rb/yabeda-rails/ "Yabeda plugin for collecting and exporting basic metrics for Rails applications"

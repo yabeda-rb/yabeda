@@ -17,6 +17,6 @@ RSpec.configure do |config|
   end
 
   config.after do
-    Yabeda.reset!
+    Yabeda.reset! # Undo call to +Yabeda.configure!+
   end
 end

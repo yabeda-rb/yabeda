@@ -47,6 +47,31 @@ module Yabeda
       end
     end
 
+    # @return [Array<Proc>] All configuration blocks for postponed setup
+    def configurators
+      @configurators ||= Concurrent::Array.new
+    end
+
+    # @return [Boolean] Whether +Yabeda.configure!+ has been already called
+    def configured?
+      !@configured_by.nil?
+    end
+    alias already_configured? configured?
+
+    # Perform configuration: registration of metrics and collector blocks
+    # @return [void]
+    def configure!
+      raise(AlreadyConfiguredError, @configured_by) if already_configured?
+
+      configurators.each do |(group, block)|
+        group group
+        class_eval(&block)
+        group nil
+      end
+
+      @configured_by = caller_locations(1, 1)[0].to_s
+    end
+
     # Forget all the configuration.
     # For testing purposes as it doesn't rollback changes in adapters.
     # @api private
@@ -56,6 +81,7 @@ module Yabeda
       groups.clear
       metrics.clear
       collectors.clear
+      configurators.clear
       instance_variable_set(:@configured_by, nil)
     end
   end
