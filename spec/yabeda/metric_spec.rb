@@ -25,8 +25,6 @@ RSpec.describe Yabeda::Metric do
         end
       end
 
-      after { ::Yabeda.default_tags.clear }
-
       it { is_expected.to match_array(%i[foo bar baz]) }
     end
   end

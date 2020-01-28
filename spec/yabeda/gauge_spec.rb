@@ -17,11 +17,6 @@ RSpec.describe Yabeda::Gauge do
     ::Yabeda.register_adapter(:test_adapter, adapter)
   end
 
-  after do
-    ::Yabeda.adapters.clear
-    ::Yabeda.metrics.clear
-  end
-
   it { expect(set_gauge).to eq(metric_value) }
 
   it "execute perform_gauge_set! method of adapter" do

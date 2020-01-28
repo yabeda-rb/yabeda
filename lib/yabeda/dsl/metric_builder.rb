@@ -3,8 +3,6 @@
 require "yabeda/dsl/option_builder"
 
 module Yabeda
-  class ConfigurationError < StandardError; end
-
   module DSL
     # Handles DSL for working with individual metrics
     class MetricBuilder

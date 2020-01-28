@@ -5,6 +5,7 @@ require "concurrent"
 require "yabeda/version"
 require "yabeda/dsl"
 require "yabeda/tags"
+require "yabeda/errors"
 
 # Extendable framework for collecting and exporting metrics from Ruby apps
 module Yabeda
@@ -44,6 +45,18 @@ module Yabeda
       metrics.each do |_, metric|
         instance.register!(metric)
       end
+    end
+
+    # Forget all the configuration.
+    # For testing purposes as it doesn't rollback changes in adapters.
+    # @api private
+    def reset!
+      default_tags.clear
+      adapters.clear
+      groups.clear
+      metrics.clear
+      collectors.clear
+      instance_variable_set(:@configured_by, nil)
     end
   end
 end

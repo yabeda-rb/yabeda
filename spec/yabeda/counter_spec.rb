@@ -17,11 +17,6 @@ RSpec.describe Yabeda::Counter do
     ::Yabeda.register_adapter(:test_adapter, adapter)
   end
 
-  after do
-    ::Yabeda.adapters.clear
-    ::Yabeda.metrics.clear
-  end
-
   it { expect(increment_counter).to eq(metric_value) }
 
   it "execute perform_counter_increment! method of adapter" do

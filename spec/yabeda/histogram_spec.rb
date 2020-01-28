@@ -17,11 +17,6 @@ RSpec.describe Yabeda::Histogram do
     ::Yabeda.register_adapter(:test_adapter, adapter)
   end
 
-  after do
-    ::Yabeda.adapters.clear
-    ::Yabeda.metrics.clear
-  end
-
   it { is_expected.to eq(metric_value) }
 
   it "execute perform_histogram_measure! method of adapter" do
