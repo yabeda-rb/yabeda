@@ -13,6 +13,7 @@ module Yabeda
     option :unit,    optional: true, comment: "In which units it is measured. E.g. `seconds`"
     option :per,     optional: true, comment: "Per which unit is measured `unit`. E.g. `call` as in seconds per call"
     option :group,   optional: true, comment: "Category name for grouping metrics"
+    option :aggregation, optional: true, comment: "How adapters should aggregate values from different processes"
 
     # Returns the value for the given label set
     def get(labels = {})
