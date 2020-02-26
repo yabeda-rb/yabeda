@@ -89,6 +89,13 @@ And then execute:
   6. See the docs for the adapter you're using
   7. Enjoy!
 
+## Available adapters
+
+ - [Prometheus](https://github.com/yabeda-rb/yabeda-prometheus)
+ - [Datadog](https://github.com/yabeda-rb/yabeda-datadog)
+ - [NewRelic](https://github.com/yabeda-rb/yabeda-newrelic)
+ - [Statsd](https://github.com/asusikov/yabeda-statsd)
+
 ## Roadmap (aka TODO or Help wanted)
 
  - Ability to change metric settings for individual adapters
