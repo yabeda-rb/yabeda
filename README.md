@@ -89,12 +89,13 @@ And then execute:
   6. See the docs for the adapter you're using
   7. Enjoy!
 
-## Available adapters
+## Available monitoring system adapters
 
  - [Prometheus](https://github.com/yabeda-rb/yabeda-prometheus)
  - [Datadog](https://github.com/yabeda-rb/yabeda-datadog)
  - [NewRelic](https://github.com/yabeda-rb/yabeda-newrelic)
  - [Statsd](https://github.com/asusikov/yabeda-statsd)
+ - _…and more! You can write your own adapter and open a pull request to add it into this list._
 
 ## Roadmap (aka TODO or Help wanted)
 
