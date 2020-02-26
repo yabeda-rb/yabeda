@@ -10,11 +10,8 @@ Metrics/BlockLength:
   - "Gemfile"
   - "spec/**/*"
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
-
-Style/BracesAroundHashParameters:
-  EnforcedStyle: context_dependent
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
@@ -47,3 +44,11 @@ Style/TrailingCommaInHashLiteral:
   Enabled: true
   EnforcedStyleForMultiline: consistent_comma
 
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true

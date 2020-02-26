@@ -3,14 +3,14 @@
 RSpec.describe Yabeda::DSL::ClassMethods do
   after do
     if Yabeda.instance_variable_defined?(:@groups)
-      Yabeda.instance_variable_get(:@groups).keys.each do |group|
+      Yabeda.instance_variable_get(:@groups).each_key do |group|
         Yabeda.singleton_class.send(:remove_method, group)
       end
       Yabeda.remove_instance_variable(:@groups)
     end
 
     if Yabeda.instance_variable_defined?(:@metrics)
-      Yabeda.instance_variable_get(:@metrics).keys.each do |metric|
+      Yabeda.instance_variable_get(:@metrics).each_key do |metric|
         Yabeda.singleton_class.send(:remove_method, metric)
       end
       Yabeda.remove_instance_variable(:@metrics)
