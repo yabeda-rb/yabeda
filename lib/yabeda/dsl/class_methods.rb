@@ -62,6 +62,22 @@ module Yabeda
         ::Yabeda.default_tags[name] = value
       end
 
+      # Redefine default tags for a limited amount of time
+      # @param tags Hash{Symbol=>#to_s}
+      def with_tags(**tags)
+        Thread.current[:yabeda_temporary_tags] = tags
+        yield
+      ensure
+        Thread.current[:yabeda_temporary_tags] = {}
+      end
+
+      # Get tags set by +with_tags+
+      # @api private
+      # @return Hash
+      def temporary_tags
+        Thread.current[:yabeda_temporary_tags] || {}
+      end
+
       private
 
       def register_metric(metric)

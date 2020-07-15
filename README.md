@@ -84,6 +84,11 @@ And then execute:
      Yabeda.configure do
        default_tag :rails_environment, 'production'
      end
+
+     # You can redefine them for limited amount of time
+     Yabeda.with_tags(rails_environment: 'staging') do
+       Yabeda.your_app.bells_rang_count.increment({bell_size: bell.size}, by: 1)
+     end
      ```
 
   6. See the docs for the adapter you're using
