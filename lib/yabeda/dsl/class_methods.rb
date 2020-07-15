@@ -68,7 +68,6 @@ module Yabeda
         name = [metric.group, metric.name].compact.join("_")
         ::Yabeda.define_singleton_method(name) { metric }
         ::Yabeda.metrics[name] = metric
-        ::Yabeda.adapters.each_value { |adapter| adapter.register!(metric) }
         register_group_for(metric) if metric.group
         metric
       end
