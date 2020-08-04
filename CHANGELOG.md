@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.6.2 - 2020-08-04
+
+### Fixed
+
+ - Compatibility with plugins (like [yabeda-puma-plugin](https://github.com/yabeda-rb/yabeda-puma-plugin)) that for some reason configures itself after Yabeda configuration was already applied by `Yabeda.configure!` (was broken in 0.6.0). [@Envek]
+
 ## 0.6.1 - 2020-07-16
 
 ### Fixed

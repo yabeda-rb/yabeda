@@ -85,6 +85,7 @@ module Yabeda
         ::Yabeda.define_singleton_method(name) { metric }
         ::Yabeda.metrics[name] = metric
         register_group_for(metric) if metric.group
+        ::Yabeda.adapters.each_value { |adapter| adapter.register!(metric) } if ::Yabeda.configured?
         metric
       end
 
