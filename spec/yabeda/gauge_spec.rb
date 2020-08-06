@@ -26,7 +26,7 @@ RSpec.describe Yabeda::Gauge do
   end
 
   describe "#increment" do
-    context 'when gauge has no initial value' do
+    context "when gauge has no initial value" do
       before { gauge.increment(tags) }
 
       it { expect(gauge.get(tags)).to eq 1 }
