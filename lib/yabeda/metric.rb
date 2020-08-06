@@ -17,7 +17,7 @@ module Yabeda
 
     # Returns the value for the given label set
     def get(labels = {})
-      values[labels]
+      values[::Yabeda::Tags.build(labels)]
     end
 
     def values
