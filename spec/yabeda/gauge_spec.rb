@@ -40,6 +40,14 @@ RSpec.describe Yabeda::Gauge do
 
       it { expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value + 1) }
     end
+
+    context "when custom step specified" do
+      it "increases by value of custom step" do
+        set_gauge
+        gauge.increment(tags, by: 42)
+        expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value + 42)
+      end
+    end
   end
 
   describe "#decrement" do
@@ -56,6 +64,14 @@ RSpec.describe Yabeda::Gauge do
       end
 
       it { expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value - 1) }
+    end
+
+    context "when custom step specified" do
+      it "decreases by value of custom step" do
+        set_gauge
+        gauge.decrement(tags, by: 42)
+        expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value - 42)
+      end
     end
   end
 end
