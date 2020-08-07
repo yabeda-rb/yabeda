@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.7.0 - 2020-08-07
+
+### Added
+
+ - `#increment` and `#decrement` convenience methods for `Yabeda::Gauge`. [#13](https://github.com/yabeda-rb/yabeda/pull/13) by [@dsalahutdinov]
+ - Ability to use custom step in `#increment` and `#decrement` for gauges. [@Envek]
+
+### Fixed
+
+ - Account for default tags in `Yabeda::Metric#get`. [@Envek]
+
 ## 0.6.2 - 2020-08-04
 
 ### Fixed
@@ -67,7 +78,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
- - Removed accidental dependency from Rails. @dsalahutdinov
+ - Removed accidental dependency from Rails. [@dsalahutdinov]
 
 ## 0.1.1 - 2018-10-17
 
@@ -80,4 +91,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Initial release of evil-metrics gem. @Envek
 
 [@Envek]: https://github.com/Envek "Andrey Novikov"
+[@dsalahutdinov]: https://github.com/dsalahutdinov "Dmitry Salahutdinov"
 [@asusikov]: https://github.com/asusikov "Alexander Susikov"
