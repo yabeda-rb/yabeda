@@ -11,5 +11,13 @@ module Yabeda
       end
       value
     end
+
+    def increment(tags)
+      set(tags, get(tags).to_i + 1)
+    end
+
+    def decrement(tags)
+      set(tags, get(tags).to_i - 1)
+    end
   end
 end

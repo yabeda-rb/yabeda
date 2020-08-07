@@ -24,4 +24,38 @@ RSpec.describe Yabeda::Gauge do
     set_gauge
     expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value)
   end
+
+  describe "#increment" do
+    context "when gauge has no initial value" do
+      before { gauge.increment(tags) }
+
+      it { expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, 1) }
+    end
+
+    context "when gauge has a value already" do
+      before do
+        set_gauge
+        gauge.increment(tags)
+      end
+
+      it { expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value + 1) }
+    end
+  end
+
+  describe "#decrement" do
+    context "when gauge has no initial value" do
+      before { gauge.decrement(tags) }
+
+      it { expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, -1) }
+    end
+
+    context "when gauge has a value already" do
+      before do
+        set_gauge
+        gauge.decrement(tags)
+      end
+
+      it { expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value - 1) }
+    end
+  end
 end
