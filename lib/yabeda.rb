@@ -6,6 +6,7 @@ require "yabeda/version"
 require "yabeda/dsl"
 require "yabeda/tags"
 require "yabeda/errors"
+require "yabeda/railtie" if defined?(Rails)
 
 # Extendable framework for collecting and exporting metrics from Ruby apps
 module Yabeda

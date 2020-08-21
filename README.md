@@ -49,7 +49,7 @@ And then execute:
     Yabeda.configure!
     ```
 
-    _But [yabeda-rails] will do this for you automatically._
+    _If you're using Ruby on Rails then it will be configured automatically!_
 
  3. Access metric in your app and use it!
 
