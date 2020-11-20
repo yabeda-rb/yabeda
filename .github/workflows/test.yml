@@ -1,0 +1,46 @@
+name: Run tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - 'v*'
+
+jobs:
+  test:
+    name: "Run tests"
+    if: "! contains(toJSON(github.event.commits.latest.message), '[ci skip]')"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ruby: 2.7
+          - ruby: 2.6
+          - ruby: 2.5
+    container:
+      image: ruby:${{ matrix.ruby }}
+      env:
+        CI: true
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: bundle-${{ matrix.ruby }}-${{ hashFiles('**/*.gemspec') }}-${{ hashFiles('**/Gemfile') }}
+          restore-keys: |
+            bundle-${{ matrix.ruby }}-${{ hashFiles('**/*.gemspec') }}-${{ hashFiles('**/Gemfile') }}
+            bundle-${{ matrix.ruby }}-
+      - name: Upgrade Bundler to 2.0 (for older Rubies)
+        run: gem install bundler -v '~> 2.0'
+      - name: Bundle install
+        run: |
+          bundle config path vendor/bundle
+          bundle install
+          bundle update
+      - name: Run Rubocop
+        run: bundle exec rubocop
+      - name: Run RSpec
+        run: bundle exec rspec

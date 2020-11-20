@@ -1,0 +1,82 @@
+name: Build and release gem to RubyGems
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Fetch current tag as annotated. See https://github.com/actions/checkout/issues/290
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+      - name: "Extract data from tag: version, message, body"
+        id: tag
+        run: |
+          git fetch --tags --force # Really fetch annotated tag. See https://github.com/actions/checkout/issues/290#issuecomment-680260080
+          echo ::set-output name=version::${GITHUB_REF#refs/tags/v}
+          echo ::set-output name=subject::$(git for-each-ref $GITHUB_REF --format='%(contents:subject)')
+          BODY="$(git for-each-ref $GITHUB_REF --format='%(contents:body)')"
+          # Extract changelog entries between this and previous version headers
+          escaped_version=$(echo ${GITHUB_REF#refs/tags/v} | sed -e 's/[]\/$*.^[]/\\&/g')
+          changelog=$(awk "BEGIN{inrelease=0} /## ${escaped_version}/{inrelease=1;next} /## [0-9]+\.[0-9]+\.[0-9]+/{inrelease=0;exit} {if (inrelease) print}" CHANGELOG.md)
+          # Multiline body for release. See https://github.community/t/set-output-truncates-multiline-strings/16852/5
+          BODY="${BODY}"$'\n'"${changelog}"
+          BODY="${BODY//'%'/'%25'}"
+          BODY="${BODY//$'\n'/'%0A'}"
+          BODY="${BODY//$'\r'/'%0D'}"
+          echo "::set-output name=body::$BODY"
+          # Add pre-release option if tag name has any suffix after vMAJOR.MINOR.PATCH
+          if [[ ${GITHUB_REF#refs/tags/} =~ ^v[0-9]+\.[0-9]+\.[0-9]+.+ ]]; then
+            echo ::set-output name=prerelease::true
+          fi
+      - name: Build gem
+        run: gem build
+      - name: Calculate checksums
+        run: sha256sum yabeda-${{ steps.tag.outputs.version }}.gem > SHA256SUM
+      - name: Check version
+        run: ls -l yabeda-${{ steps.tag.outputs.version }}.gem
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ steps.tag.outputs.subject }}
+          body: ${{ steps.tag.outputs.body }}
+          draft: false
+          prerelease: ${{ steps.tag.outputs.prerelease }}
+      - name: Upload built gem as release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: yabeda-${{ steps.tag.outputs.version }}.gem
+          asset_name: yabeda-${{ steps.tag.outputs.version }}.gem
+          asset_content_type: application/x-tar
+      - name: Upload checksums as release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: SHA256SUM
+          asset_name: SHA256SUM
+          asset_content_type: text/plain
+      - name: Publish to GitHub packages
+        env:
+          GEM_HOST_API_KEY: Bearer ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gem push yabeda-${{ steps.tag.outputs.version }}.gem --host https://rubygems.pkg.github.com/${{ github.repository_owner }}
+      - name: Publish to RubyGems
+        env:
+          GEM_HOST_API_KEY: "${{ secrets.RUBYGEMS_API_KEY }}"
+        run: |
+          gem push yabeda-${{ steps.tag.outputs.version }}.gem

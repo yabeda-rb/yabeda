@@ -130,6 +130,36 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
+### Releasing
+
+ 1. Bump version number in `lib/yabeda/version.rb`
+
+    In case of pre-releases keep in mind [rubygems/rubygems#3086](https://github.com/rubygems/rubygems/issues/3086) and check version with command like `Gem::Version.new(Yabeda::VERSION).to_s`
+
+ 2. Fill `CHANGELOG.md` with missing changes, add header with version and date.
+
+ 3. Make a commit:
+
+    ```sh
+    git add lib/yabeda/version.rb CHANGELOG.md
+    version=$(ruby -r ./lib/yabeda/version.rb -e "puts Gem::Version.new(Yabeda::VERSION)")
+    git commit --message="${version}: " --edit
+    ```
+
+ 3. Create annotated tag:
+
+    ```sh
+    git tag v${version} --annotate --message="${version}: " --edit --sign
+    ```
+
+ 4. Fill version name into subject line and (optionally) some description (changes will be taken from changelog and appended automatically)
+
+ 5. Push it:
+
+    ```sh
+    git push --follow-tags
+    ```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/yabeda-rb/yabeda.
