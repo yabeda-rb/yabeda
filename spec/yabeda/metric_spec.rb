@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Yabeda::Metric do
-  let(:metric)  { described_class.new(name, options) }
+  let(:metric)  { described_class.new(name, **options) }
   let(:name)    { "some_metric" }
   let(:options) { { tags: %i[foo bar] } }
 
