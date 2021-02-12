@@ -1,6 +1,6 @@
 # Yabeda
 
-[![Gem Version](https://badge.fury.io/rb/yabeda.svg)](https://rubygems.org/gems/yabeda) [![Build Status](https://travis-ci.org/yabeda-rb/yabeda.svg?branch=master)](https://travis-ci.org/yabeda-rb/yabeda)
+[![Gem Version](https://badge.fury.io/rb/yabeda.svg)](https://rubygems.org/gems/yabeda)
 
 **This software is Work in Progress: features will appear and disappear, API will be changed, your feedback is always welcome!**
 
@@ -96,10 +96,38 @@ And then execute:
 
 ## Available monitoring system adapters
 
- - [Prometheus](https://github.com/yabeda-rb/yabeda-prometheus)
+### Maintained by Yabeda
+
+ - Prometheus:
+   - [yabeda-prometheus](https://github.com/yabeda-rb/yabeda-prometheus) — wraps [official Ruby client for Prometheus](https://github.com/prometheus/client_ruby).
+   - [yabeda-prometheus-mmap](https://github.com/yabeda-rb/yabeda-prometheus-mmap) — wraps [GitLab's fork of Prometheus Ruby client](https://gitlab.com/gitlab-org/prometheus-client-mmap) which may work better for multi-process application servers.
  - [Datadog](https://github.com/yabeda-rb/yabeda-datadog)
  - [NewRelic](https://github.com/yabeda-rb/yabeda-newrelic)
+
+### Third-party adapters
+
+These are developed and maintained by other awesome folks:
+
  - [Statsd](https://github.com/asusikov/yabeda-statsd)
+ - _…and more! You can write your own adapter and open a pull request to add it into this list._
+
+## Available plugins to collect metrics
+
+### Maintained by Yabeda
+
+ - [yabeda-rails] — basic request metrics for [Ruby on Rails](https://rubyonrails.org/) applications.
+ - [yabeda-sidekiq] — comprehensive set of metrics for monitoring [Sidekiq](https://sidekiq.org/) jobs execution and queues.
+ - [yabeda-faktory] — metrics for monitoring jobs execution by Ruby workers of [Faktory](https://contribsys.com/faktory/).
+ - [yabeda-graphql] — metrics to query and field-level monitoring for apps using [GraphQL-Ruby](https://graphql-ruby.org/).
+ - [yabeda-puma-plugin] — metrics for internal state and performance of [Puma](https://puma.io/) application server.
+ - [yabeda-http_requests] — monitor how many outgoing HTTP calls your application does (uses [Sniffer](https://github.com/aderyabin/sniffer)).
+
+### Third-party plugins
+
+These are developed and maintained by other awesome folks:
+
+ - [yabeda-grape](https://github.com/efigence/yabeda-grape) — metrics for [Grape](https://github.com/ruby-grape/grape) framework.
+ - [yabeda-gruf](https://github.com/Placewise/yabeda-gruf) — metrics for [gRPC Ruby Framework](https://github.com/bigcommerce/gruf)
  - _…and more! You can write your own adapter and open a pull request to add it into this list._
 
 ## Roadmap (aka TODO or Help wanted)
@@ -169,3 +197,8 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/yabeda
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
 [yabeda-rails]: https://github.com/yabeda-rb/yabeda-rails/ "Yabeda plugin for collecting and exporting basic metrics for Rails applications"
+[yabeda-sidekiq]: https://github.com/yabeda-rb/yabeda-sidekiq/ "Yabeda plugin for complete monitoring of Sidekiq metrics"
+[yabeda-faktory]: https://github.com/yabeda-rb/yabeda-faktory/ "Yabeda plugin for complete monitoring of Faktory Ruby Workers"
+[yabeda-graphql]: https://github.com/yabeda-rb/yabeda-graphql/ "Measure and understand how good your GraphQL-Ruby application works"
+[yabeda-puma-plugin]: https://github.com/yabeda-rb/yabeda-puma-plugin/ "Collects Puma web-server metrics from puma control application"
+[yabeda-http_requests]: https://github.com/yabeda-rb/yabeda-http_requests/ "Builtin metrics to monitor external HTTP requests"
