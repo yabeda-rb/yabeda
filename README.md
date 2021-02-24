@@ -128,6 +128,7 @@ These are developed and maintained by other awesome folks:
 
  - [yabeda-grape](https://github.com/efigence/yabeda-grape) — metrics for [Grape](https://github.com/ruby-grape/grape) framework.
  - [yabeda-gruf](https://github.com/Placewise/yabeda-gruf) — metrics for [gRPC Ruby Framework](https://github.com/bigcommerce/gruf)
+ - [yabeda-gc](https://github.com/ianks/yabeda-gc) — metrics for Ruby garbage collection.
  - _…and more! You can write your own adapter and open a pull request to add it into this list._
 
 ## Roadmap (aka TODO or Help wanted)
