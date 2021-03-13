@@ -58,8 +58,12 @@ module Yabeda
       #
       # @param name [Symbol] Name of default tag
       # @param value [String] Value of default tag
-      def default_tag(name, value)
-        ::Yabeda.default_tags[name] = value
+      def default_tag(name, value, group: nil)
+        if group
+          Yabeda::Tags.tag_group(group)[name] = value
+        else
+          Yabeda.default_tags[name] = value
+        end
       end
 
       # Redefine default tags for a limited amount of time

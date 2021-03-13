@@ -79,20 +79,35 @@ And then execute:
     end
     ```
 
-  5. _Optionally_ setup default tags that will be added to all metrics
+  5. _Optionally_ setup default tags for all appropriate metrics
      ```ruby
      Yabeda.configure do
+       # matches all metrics in all groups
        default_tag :rails_environment, 'production'
+
+       # matches all metrics in the :your_app group
+       default_tag :tag_name, 'override', group: :your_app
      end
+     ```
 
      # You can redefine them for limited amount of time
      Yabeda.with_tags(rails_environment: 'staging') do
        Yabeda.your_app.bells_rang_count.increment({bell_size: bell.size}, by: 1)
      end
-     ```
 
-  6. See the docs for the adapter you're using
-  7. Enjoy!
+     **Note**: any usage of `with_tags` **must** have all those tags defined on all metrics that are generated in the block.
+
+  6. _Optionally_ override default tags using precedence:
+
+    The tag precedence from high to low is:
+
+    * Manually specified tags
+    * Thread local tags
+    * Group specific tags
+    * Global tags
+
+  7. See the docs for the adapter you're using
+  8. Enjoy!
 
 ## Available monitoring system adapters
 

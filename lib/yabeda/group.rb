@@ -9,6 +9,10 @@ module Yabeda
 
     param :name
 
+    def default_tags
+      Yabeda::Tags.tag_group(name)
+    end
+
     def register_metric(metric)
       define_singleton_method(metric.name) { metric }
     end
