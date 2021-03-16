@@ -20,7 +20,9 @@ module Yabeda
 
     # @return [Hash<String, Yabeda::Group>] All registered metrics
     def groups
-      @groups ||= Concurrent::Hash.new
+      @groups ||= Concurrent::Hash.new.tap do |hash|
+        hash[nil] = Yabeda::Group.new(nil)
+      end
     end
 
     # @return [Hash<String, Yabeda::BaseAdapter>] All loaded adapters
@@ -35,7 +37,7 @@ module Yabeda
 
     # @return [Hash<Symbol, Symbol>] All added default tags
     def default_tags
-      @default_tags ||= Concurrent::Hash.new
+      groups[nil].default_tags
     end
 
     # @param [Symbol] name
@@ -87,10 +89,11 @@ module Yabeda
     # For testing purposes as it doesn't rollback changes in adapters.
     # @api private
     def reset!
-      default_tags.clear
       adapters.clear
-      groups.clear
-      metrics.clear
+      groups.each_key { |group| singleton_class.send(:remove_method, group) if group && respond_to?(group) }
+      @groups = nil
+      metrics.each_key { |metric| singleton_class.send(:remove_method, metric) if respond_to?(metric) }
+      @metrics = nil
       collectors.clear
       configurators.clear
       instance_variable_set(:@configured_by, nil)

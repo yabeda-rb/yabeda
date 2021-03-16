@@ -58,28 +58,26 @@ module Yabeda
       #
       # @param name [Symbol] Name of default tag
       # @param value [String] Value of default tag
-      def default_tag(name, value, group: nil)
-        if group
-          Yabeda::Tags.tag_group(group)[name] = value
-        else
-          Yabeda.default_tags[name] = value
-        end
+      def default_tag(name, value, group: @group)
+        Yabeda.groups[group] ||= Yabeda::Group.new(group)
+        Yabeda.groups[group].default_tag(name, value)
       end
 
       # Redefine default tags for a limited amount of time
       # @param tags Hash{Symbol=>#to_s}
       def with_tags(**tags)
-        Thread.current[:yabeda_temporary_tags] = tags
+        previous_temp_tags = temporary_tags
+        Thread.current[:yabeda_temporary_tags] = Thread.current[:yabeda_temporary_tags].merge(tags)
         yield
       ensure
-        Thread.current[:yabeda_temporary_tags] = {}
+        Thread.current[:yabeda_temporary_tags] = previous_temp_tags
       end
 
       # Get tags set by +with_tags+
       # @api private
       # @return Hash
       def temporary_tags
-        Thread.current[:yabeda_temporary_tags] || {}
+        Thread.current[:yabeda_temporary_tags] ||= {}
       end
 
       private
@@ -99,6 +97,9 @@ module Yabeda
         if group.nil?
           group = Group.new(metric.group)
           ::Yabeda.groups[metric.group] = group
+        end
+
+        if ! ::Yabeda.respond_to?(metric.group)
           ::Yabeda.define_singleton_method(metric.group) { group }
         end
 

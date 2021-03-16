@@ -57,26 +57,20 @@ RSpec.describe Yabeda::Tags do
         end
         expect(result).to eq controller: "foo", action: "whatever", format: "html", id: "100500"
       end
-    end
 
-    context "when a group is specified" do
-      before do
-        Yabeda.configure do
-          default_tag :action, "default"
-          default_tag :controller, "default"
-          default_tag :key, "value", group: :g1
-          default_tag :action, "overridden", group: :g1
-          default_tag :absent, "value", group: :g2
+      it "permits nesting with_tags" do
+        Yabeda.with_tags(action: "index") do
+          Yabeda.with_tags(format: "json") do
+            expect(result).to include(format: "json", action: "index")
+          end
         end
-        Yabeda.configure!
       end
 
-      it { is_expected.to eq(action: "default", controller: "foo") }
-
-      context "and is built for the group" do
-        let(:group) { Yabeda::Group.new(:g1) }
-
-        it { is_expected.to eq(action: "overridden", controller: "foo", key: "value") }
+      it "restores previous with_tags after nesting" do
+        Yabeda.with_tags(action: "index") do
+          Yabeda.with_tags(format: "json") { }
+          expect(result).to include(format: "html", action: "index")
+        end
       end
     end
   end

@@ -9,8 +9,23 @@ module Yabeda
 
     param :name
 
+    def tags
+      default_tags.keys
+    end
+
     def default_tags
-      Yabeda::Tags.tag_group(name)
+      @default_tags ||= Concurrent::Hash.new
+
+      if name
+        Yabeda.groups[nil].default_tags.merge!(@default_tags)
+      else
+        @default_tags.dup
+      end
+    end
+
+    def default_tag(key, value)
+      @default_tags ||= Concurrent::Hash.new
+      @default_tags[key] = value
     end
 
     def register_metric(metric)

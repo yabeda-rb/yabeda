@@ -25,7 +25,7 @@ module Yabeda
     end
 
     def tags
-      (Yabeda.default_tags.keys + Array(super)).uniq
+      (Yabeda.groups[group].tags + Array(super)).uniq
     end
   end
 end
