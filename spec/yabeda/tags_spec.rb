@@ -68,7 +68,7 @@ RSpec.describe Yabeda::Tags do
 
       it "restores previous with_tags after nesting" do
         Yabeda.with_tags(action: "index") do
-          Yabeda.with_tags(format: "json") { }
+          Yabeda.with_tags(format: "json") {}
           expect(result).to include(format: "html", action: "index")
         end
       end

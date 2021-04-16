@@ -88,23 +88,23 @@ And then execute:
        # matches all metrics in the :your_app group
        default_tag :tag_name, 'override', group: :your_app
      end
-     ```
 
      # You can redefine them for limited amount of time
      Yabeda.with_tags(rails_environment: 'staging') do
        Yabeda.your_app.bells_rang_count.increment({bell_size: bell.size}, by: 1)
      end
+     ```
 
      **Note**: any usage of `with_tags` **must** have all those tags defined on all metrics that are generated in the block.
 
   6. _Optionally_ override default tags using precedence:
 
-    The tag precedence from high to low is:
+     The tag precedence from high to low is:
 
-    * Manually specified tags
-    * Thread local tags
-    * Group specific tags
-    * Global tags
+     * Manually specified tags
+     * Thread local tags (specified by Yabeda.with_tags)
+     * Group specific tags
+     * Global tags
 
   7. See the docs for the adapter you're using
   8. Enjoy!

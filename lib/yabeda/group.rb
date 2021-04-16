@@ -9,18 +9,9 @@ module Yabeda
 
     param :name
 
-    def tags
-      default_tags.keys
-    end
-
     def default_tags
       @default_tags ||= Concurrent::Hash.new
-
-      if name
-        Yabeda.groups[nil].default_tags.merge!(@default_tags)
-      else
-        @default_tags.dup
-      end
+      ::Yabeda.default_tags.merge(@default_tags)
     end
 
     def default_tag(key, value)

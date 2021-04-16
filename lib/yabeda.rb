@@ -21,7 +21,7 @@ module Yabeda
     # @return [Hash<String, Yabeda::Group>] All registered metrics
     def groups
       @groups ||= Concurrent::Hash.new.tap do |hash|
-        hash[nil] = Yabeda::Group.new(nil)
+        hash[nil] = Yabeda::GlobalGroup.new(nil)
       end
     end
 
@@ -35,9 +35,9 @@ module Yabeda
       @collectors ||= Concurrent::Array.new
     end
 
-    # @return [Hash<Symbol, Symbol>] All added default tags
+    # @return [Hash<Symbol, Symbol>] All added global default tags
     def default_tags
-      groups[nil].default_tags
+      @default_tags ||= Concurrent::Hash.new
     end
 
     # @param [Symbol] name
@@ -88,7 +88,9 @@ module Yabeda
     # Forget all the configuration.
     # For testing purposes as it doesn't rollback changes in adapters.
     # @api private
+    # rubocop: disable Metrics/AbcSize
     def reset!
+      default_tags.clear
       adapters.clear
       groups.each_key { |group| singleton_class.send(:remove_method, group) if group && respond_to?(group) }
       @groups = nil
@@ -98,5 +100,6 @@ module Yabeda
       configurators.clear
       instance_variable_set(:@configured_by, nil)
     end
+    # rubocop: enable Metrics/AbcSize
   end
 end

@@ -5,6 +5,7 @@ require "yabeda/counter"
 require "yabeda/gauge"
 require "yabeda/histogram"
 require "yabeda/group"
+require "yabeda/global_group"
 require "yabeda/dsl/metric_builder"
 
 module Yabeda
@@ -30,6 +31,7 @@ module Yabeda
       # (like NewRelic) it is treated individually and has a special meaning.
       def group(group_name)
         @group = group_name
+        Yabeda.groups[@group] ||= Yabeda::Group.new(@group)
         return unless block_given?
 
         yield
@@ -59,8 +61,12 @@ module Yabeda
       # @param name [Symbol] Name of default tag
       # @param value [String] Value of default tag
       def default_tag(name, value, group: @group)
-        Yabeda.groups[group] ||= Yabeda::Group.new(group)
-        Yabeda.groups[group].default_tag(name, value)
+        if group
+          Yabeda.groups[group] ||= Yabeda::Group.new(group)
+          Yabeda.groups[group].default_tag(name, value)
+        else
+          Yabeda.default_tags[name] = value
+        end
       end
 
       # Redefine default tags for a limited amount of time
@@ -99,9 +105,7 @@ module Yabeda
           ::Yabeda.groups[metric.group] = group
         end
 
-        if ! ::Yabeda.respond_to?(metric.group)
-          ::Yabeda.define_singleton_method(metric.group) { group }
-        end
+        ::Yabeda.define_singleton_method(metric.group) { group } unless ::Yabeda.respond_to?(metric.group)
 
         group.register_metric(metric)
       end
