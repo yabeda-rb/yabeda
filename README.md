@@ -121,6 +121,7 @@ These are developed and maintained by other awesome folks:
  - [yabeda-graphql] — metrics to query and field-level monitoring for apps using [GraphQL-Ruby](https://graphql-ruby.org/).
  - [yabeda-puma-plugin] — metrics for internal state and performance of [Puma](https://puma.io/) application server.
  - [yabeda-http_requests] — monitor how many outgoing HTTP calls your application does (uses [Sniffer](https://github.com/aderyabin/sniffer)).
+ - [yabeda-schked] — monitor number and duration of Cron jobs executed by [Schked](https://github.com/bibendi/schked).
 
 ### Third-party plugins
 
@@ -203,3 +204,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 [yabeda-graphql]: https://github.com/yabeda-rb/yabeda-graphql/ "Measure and understand how good your GraphQL-Ruby application works"
 [yabeda-puma-plugin]: https://github.com/yabeda-rb/yabeda-puma-plugin/ "Collects Puma web-server metrics from puma control application"
 [yabeda-http_requests]: https://github.com/yabeda-rb/yabeda-http_requests/ "Builtin metrics to monitor external HTTP requests"
+[yabeda-schked]: https://github.com/yabeda-rb/yabeda-schked/ "Built-in metrics for monitoring Schked recurring jobs out of the box"
