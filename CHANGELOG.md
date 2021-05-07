@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.9.0 - 2021-05-07
+
+### Added
+
+- Ability to set global metric tags only for a specific group [#19](https://github.com/yabeda-rb/yabeda/pull/19) by [@liaden]
+
 ## 0.8.0 - 2020-08-21
 
 ### Added
@@ -99,3 +105,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [@Envek]: https://github.com/Envek "Andrey Novikov"
 [@dsalahutdinov]: https://github.com/dsalahutdinov "Dmitry Salahutdinov"
 [@asusikov]: https://github.com/asusikov "Alexander Susikov"
+[@liaden]: https://github.com/liaden "Joel Johnson"
