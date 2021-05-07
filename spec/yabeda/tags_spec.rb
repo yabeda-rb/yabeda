@@ -73,5 +73,18 @@ RSpec.describe Yabeda::Tags do
         end
       end
     end
+
+    context "when group tags are set" do
+      let(:group) { :foo }
+
+      before do
+        Yabeda.configure do
+          default_tag :bar, "baz", group: :foo
+        end
+        Yabeda.configure!
+      end
+
+      it { is_expected.to eq(controller: "foo", bar: "baz") }
+    end
   end
 end

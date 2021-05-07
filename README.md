@@ -102,7 +102,7 @@ And then execute:
      The tag precedence from high to low is:
 
      * Manually specified tags
-     * Thread local tags (specified by Yabeda.with_tags)
+     * Thread local tags (specified by `Yabeda.with_tags`)
      * Group specific tags
      * Global tags
 
