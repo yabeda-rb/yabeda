@@ -2,9 +2,10 @@
 
 RSpec.describe Yabeda::Tags do
   describe ".build" do
-    subject(:result) { described_class.build(tags) }
+    subject(:result) { described_class.build(tags, group) }
 
     let(:tags) { { controller: "foo" } }
+    let(:group) { nil }
 
     context "when default tags are not set" do
       it { is_expected.to eq(controller: "foo") }
@@ -56,6 +57,34 @@ RSpec.describe Yabeda::Tags do
         end
         expect(result).to eq controller: "foo", action: "whatever", format: "html", id: "100500"
       end
+
+      it "permits nesting with_tags" do
+        Yabeda.with_tags(action: "index") do
+          Yabeda.with_tags(format: "json") do
+            expect(result).to include(format: "json", action: "index")
+          end
+        end
+      end
+
+      it "restores previous with_tags after nesting" do
+        Yabeda.with_tags(action: "index") do
+          Yabeda.with_tags(format: "json") {}
+          expect(result).to include(format: "html", action: "index")
+        end
+      end
+    end
+
+    context "when group tags are set" do
+      let(:group) { :foo }
+
+      before do
+        Yabeda.configure do
+          default_tag :bar, "baz", group: :foo
+        end
+        Yabeda.configure!
+      end
+
+      it { is_expected.to eq(controller: "foo", bar: "baz") }
     end
   end
 end

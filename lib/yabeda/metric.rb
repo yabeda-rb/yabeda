@@ -17,15 +17,17 @@ module Yabeda
 
     # Returns the value for the given label set
     def get(labels = {})
-      values[::Yabeda::Tags.build(labels)]
+      values[::Yabeda::Tags.build(labels, group)]
     end
 
     def values
       @values ||= Concurrent::Hash.new
     end
 
+    # Returns allowed tags for metric (with account for global and group-level +default_tags+)
+    # @return Array<Symbol>
     def tags
-      (Yabeda.default_tags.keys + Array(super)).uniq
+      (Yabeda.groups[group].default_tags.keys + Array(super)).uniq
     end
   end
 end

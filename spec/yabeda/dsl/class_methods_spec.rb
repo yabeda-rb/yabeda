@@ -1,24 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Yabeda::DSL::ClassMethods do
-  after do
-    if Yabeda.instance_variable_defined?(:@groups)
-      Yabeda.instance_variable_get(:@groups).each_key do |group|
-        Yabeda.singleton_class.send(:remove_method, group)
-      end
-      Yabeda.remove_instance_variable(:@groups)
-    end
-
-    if Yabeda.instance_variable_defined?(:@metrics)
-      Yabeda.instance_variable_get(:@metrics).each_key do |metric|
-        Yabeda.singleton_class.send(:remove_method, metric)
-      end
-      Yabeda.remove_instance_variable(:@metrics)
-    end
-
-    ::Yabeda.default_tags.clear
-  end
-
   describe ".group" do
     context "without block" do
       before do
@@ -124,6 +106,41 @@ RSpec.describe Yabeda::DSL::ClassMethods do
       end
 
       it { is_expected.to eq(environment: "test") }
+    end
+
+    context "with a specified group that does not exist" do
+      before do
+        Yabeda.configure { default_tag :environment, "test", group: :missing_group }
+        Yabeda.configure!
+      end
+
+      it "creates the group" do
+        expect(Yabeda.groups[:missing_group]).to be_a(Yabeda::Group)
+      end
+
+      it "defines the default tag" do
+        expect(Yabeda.groups[:missing_group].default_tags).to eq(environment: "test")
+      end
+    end
+
+    context "when specified group is defined after default_tag" do
+      before do
+        Yabeda.configure { default_tag :environment, "test", group: :missing_group }
+        Yabeda.configure do
+          group :missing_group
+          default_tag :key, "value"
+          gauge :test_gauge, comment: "..."
+        end
+        Yabeda.configure!
+      end
+
+      it "defines all the tags" do
+        expect(Yabeda.groups[:missing_group].default_tags).to eq(environment: "test", key: "value")
+      end
+
+      it "test_gauge has all the tags defined" do
+        expect(Yabeda.missing_group.test_gauge.tags).to eq(%i[environment key])
+      end
     end
   end
 end
