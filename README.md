@@ -1,4 +1,4 @@
-# Yabeda
+# ![Yabeda](./yabeda-logo.png)
 
 [![Gem Version](https://badge.fury.io/rb/yabeda.svg)](https://rubygems.org/gems/yabeda)
 
