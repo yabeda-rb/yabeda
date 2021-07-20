@@ -6,7 +6,18 @@ module Yabeda
   class Histogram < Metric
     option :buckets
 
-    def measure(tags, value)
+    # rubocop: disable Metrics/MethodLength
+    def measure(tags, value = nil)
+      if value.nil? ^ block_given?
+        raise ArgumentError, "You must provide either numeric value or block for Yabeda::Histogram#measure!"
+      end
+
+      if block_given?
+        starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        yield
+        value = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - starting)
+      end
+
       all_tags = ::Yabeda::Tags.build(tags, group)
       values[all_tags] = value
       ::Yabeda.adapters.each do |_, adapter|
@@ -14,5 +25,6 @@ module Yabeda
       end
       value
     end
+    # rubocop: enable Metrics/MethodLength
   end
 end

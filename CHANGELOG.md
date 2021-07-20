@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Ability to pass a block to `Yabeda::Histogram#measure` to automatically measure its runtime in seconds using [monotonic time](https://blog.dnsimple.com/2018/03/elapsed-time-with-ruby-the-right-way/).
+
 ## 0.9.0 - 2021-05-07
 
 ### Added
