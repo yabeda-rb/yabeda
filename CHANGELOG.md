@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Ability to pass a block to `Yabeda::Histogram#measure` to automatically measure its runtime in seconds using [monotonic time](https://blog.dnsimple.com/2018/03/elapsed-time-with-ruby-the-right-way/).
+- Debug mode that will enable some additional metrics to help debug performance issues with your usage of Yabeda (or Yabeda itself). Use environment variable `YABEDA_DEBUG` to enable it or call `Yabeda.debug!`.
+- Debugging histogram `yabeda_collect_duration` that measures duration of every collect block, as they are used for collecting metrics of application state and usually makes some potentially slow queries to databases, network requests, etc.
+
+### Changed
+
+- Adapters now should use method `Yabeda.collect!` instead of manual calling of every collector block. 
 
 ## 0.9.0 - 2021-05-07
 

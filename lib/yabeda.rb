@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require "concurrent"
+require "forwardable"
 
 require "yabeda/version"
+require "yabeda/config"
 require "yabeda/dsl"
 require "yabeda/tags"
 require "yabeda/errors"
@@ -13,6 +15,8 @@ module Yabeda
   include DSL
 
   class << self
+    extend Forwardable
+
     # @return [Hash<String, Yabeda::Metric>] All registered metrics
     def metrics
       @metrics ||= Concurrent::Hash.new
@@ -33,6 +37,25 @@ module Yabeda
     # @return [Array<Proc>] All collectors for periodical retrieving of metrics
     def collectors
       @collectors ||= Concurrent::Array.new
+    end
+
+    def config
+      @config ||= Config.new
+    end
+
+    def_delegators :config, :debug?
+
+    # Execute all collector blocks for periodical retrieval of metrics
+    #
+    # This method is intended to be used by monitoring systems adapters
+    def collect!
+      collectors.each do |collector|
+        if config.debug?
+          yabeda.collect_duration.measure({ location: collector.source_location.join(":") }, &collector)
+        else
+          collector.call
+        end
+      end
     end
 
     # @return [Hash<Symbol, Symbol>] All added global default tags
@@ -67,6 +90,8 @@ module Yabeda
     def configure!
       raise(AlreadyConfiguredError, @configured_by) if already_configured?
 
+      debug! if config.debug?
+
       configurators.each do |(group, block)|
         group group
         class_eval(&block)
@@ -82,6 +107,24 @@ module Yabeda
       end
 
       @configured_by = caller_locations(1, 1)[0].to_s
+    end
+
+    # Enable and setup service metrics to monitor yabeda performance
+    def debug!
+      return false if @debug_was_enabled_by # Prevent multiple calls
+
+      config.debug ||= true # Enable debug mode in config if it wasn't enabled from other sources
+      @debug_was_enabled_by = caller_locations(1, 1)[0].to_s
+
+      configure do
+        group :yabeda
+
+        histogram :collect_duration,
+                  tags: %i[location], unit: :seconds,
+                  buckets: [0.0001, 0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 30, 60].freeze,
+                  comment: "A histogram for the time required to evaluate collect blocks"
+      end
+      true
     end
     # rubocop: enable Metrics/MethodLength, Metrics/AbcSize
 
@@ -99,6 +142,7 @@ module Yabeda
       collectors.clear
       configurators.clear
       instance_variable_set(:@configured_by, nil)
+      instance_variable_set(:@debug_was_enabled_by, nil)
     end
     # rubocop: enable Metrics/AbcSize
   end

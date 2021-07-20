@@ -147,6 +147,20 @@ These are developed and maintained by other awesome folks:
  - [yabeda-gc](https://github.com/ianks/yabeda-gc) — metrics for Ruby garbage collection.
  - _…and more! You can write your own adapter and open a pull request to add it into this list._
 
+## Configuration
+
+Configuration is handled by [anyway_config] gem. With it you can load settings from environment variables (which names are constructed from config key upcased and prefixed with `YABEDA_`), YAML files, and other sources. See [anyway_config] docs for details.
+
+Config key | Type     | Default | Description |
+---------- | -------- | ------- | ----------- |
+`debug`    | boolean  | `false` | Collects metrics measuring Yabeda performance |
+
+## Debugging metrics
+
+ - Time of collector block run: `yabeda_collect_duration` (segmented by block source location). Collector blocks are used for collecting metrics of application state and usually makes some potentially slow queries to databases, network requests, etc.
+
+These are only enabled in debug mode. To enable it either set `debug` config key to `true` (e.g. by specifying `YABEDA_DEBUG=true` in your environment variables or executing `Yabeda.debug!` in your code).
+
 ## Roadmap (aka TODO or Help wanted)
 
  - Ability to change metric settings for individual adapters
@@ -220,3 +234,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 [yabeda-puma-plugin]: https://github.com/yabeda-rb/yabeda-puma-plugin/ "Collects Puma web-server metrics from puma control application"
 [yabeda-http_requests]: https://github.com/yabeda-rb/yabeda-http_requests/ "Builtin metrics to monitor external HTTP requests"
 [yabeda-schked]: https://github.com/yabeda-rb/yabeda-schked/ "Built-in metrics for monitoring Schked recurring jobs out of the box"
+[anyway_config]: https://github.com/palkan/anyway_config "Configuration library for Ruby gems and applications"
