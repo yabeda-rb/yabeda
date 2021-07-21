@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.10.0 - 2021-07-21
+
 ### Added
 
 - Ability to pass a block to `Yabeda::Histogram#measure` to automatically measure its runtime in seconds using [monotonic time](https://blog.dnsimple.com/2018/03/elapsed-time-with-ruby-the-right-way/).
