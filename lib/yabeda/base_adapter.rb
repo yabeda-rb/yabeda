@@ -35,5 +35,8 @@ module Yabeda
     def perform_histogram_measure!(_metric, _tags, _value)
       raise NotImplementedError, "#{self.class} doesn't support measuring histograms"
     end
+
+    # Hook to enable debug mode in adapters when it is enabled in Yabeda itself
+    def debug!; end
   end
 end

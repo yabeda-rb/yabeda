@@ -45,7 +45,9 @@ RSpec.describe Yabeda do
   describe ".collect!" do
     subject(:collect!) { described_class.collect! }
 
-    let(:adapter) { instance_double("Yabeda::BaseAdapter", perform_histogram_measure!: true, register!: true) }
+    let(:adapter) do
+      instance_double("Yabeda::BaseAdapter", perform_histogram_measure!: true, register!: true, debug!: true)
+    end
     let(:collector) do
       proc do
         sleep(0.01)
