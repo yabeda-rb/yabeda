@@ -2,8 +2,6 @@
 
 [![Gem Version](https://badge.fury.io/rb/yabeda.svg)](https://rubygems.org/gems/yabeda)
 
-**This software is Work in Progress: features will appear and disappear, API will be changed, your feedback is always welcome!**
-
 Extendable solution for easy setup of monitoring in your Ruby apps.
 
 <a href="https://evilmartians.com/?utm_source=yabeda&utm_campaign=project_page">
@@ -14,21 +12,31 @@ Extendable solution for easy setup of monitoring in your Ruby apps.
 
 ## Installation
 
-Most of the time you don't need to add this gem to your Gemfile directly (unless you're only collecting your custom metrics):
+Most of the time you don't need to add this gem to your Gemfile directly (unless you're only collecting your custom metrics).
+
+Add some [plugins](#plugins) to collect metrics:
 
 ```ruby
-gem 'yabeda'
-# Then add monitoring system adapter, e.g.:
-# gem 'yabeda-prometheus'
+gem 'yabeda-rails'
+gem 'yabeda-sidekiq'
+# and so on
+```
+
+And one of [adapters](#adapters) to expose metrics:
+
+```ruby
+gem 'yabeda-prometheus'
 ```
 
 And then execute:
 
     $ bundle
 
+And you're done!
+
 ## Usage
 
- 1. Declare your metrics:
+ 1. Declare your own metrics:
 
     ```ruby
     Yabeda.configure do
@@ -49,7 +57,7 @@ And then execute:
     Yabeda.configure!
     ```
 
-    _If you're using Ruby on Rails then it will be configured automatically!_
+    _If you're using Ruby on Rails then it will be configured automatically via railtie!_
 
  3. Access metric in your app and use it!
 
@@ -109,7 +117,9 @@ And then execute:
   7. See the docs for the adapter you're using
   8. Enjoy!
 
-## Available monitoring system adapters
+## Monitoring system adapters <a name="adapters"></a>
+
+Adapters allows to export collected metrics to monitoring system of your choice.
 
 ### Maintained by Yabeda
 
@@ -126,7 +136,9 @@ These are developed and maintained by other awesome folks:
  - [Statsd](https://github.com/asusikov/yabeda-statsd)
  - _…and more! You can write your own adapter and open a pull request to add it into this list._
 
-## Available plugins to collect metrics
+## Plugins to collect metrics <a name="plugins"></a>
+
+Plugins contains metrics declaration and logic for their collection. Most of them are plug'n'play things!
 
 ### Maintained by Yabeda
 
