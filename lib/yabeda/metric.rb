@@ -29,5 +29,9 @@ module Yabeda
     def tags
       (Yabeda.groups[group].default_tags.keys + Array(super)).uniq
     end
+
+    def inspect
+      "#<#{self.class.name}: #{[@group, @name].compact.join('.')}>"
+    end
   end
 end
