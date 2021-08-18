@@ -25,7 +25,7 @@ RSpec.describe Yabeda::Metric do
         Yabeda.configure do
           default_tag :bar, "2"
         end
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       it "returns value with account for default tags values" do
@@ -55,7 +55,7 @@ RSpec.describe Yabeda::Metric do
           default_tag :bar, "test"
           default_tag :baz, "qux"
         end
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       it { is_expected.to match_array(%i[foo bar baz]) }

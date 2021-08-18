@@ -16,7 +16,7 @@ RSpec.describe Yabeda::Tags do
         Yabeda.configure do
           default_tag :environment, "test"
         end
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       it { is_expected.to eq(environment: "test", controller: "foo") }
@@ -27,7 +27,7 @@ RSpec.describe Yabeda::Tags do
         Yabeda.configure do
           default_tag :controller, "default"
         end
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       it { is_expected.to eq(controller: "foo") }
@@ -40,7 +40,7 @@ RSpec.describe Yabeda::Tags do
           default_tag :action, "whatever"
           default_tag :format, "html"
         end
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       let(:tags) { { controller: "foo", id: "100500" } }
@@ -81,7 +81,7 @@ RSpec.describe Yabeda::Tags do
         Yabeda.configure do
           default_tag :bar, "baz", group: :foo
         end
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       it { is_expected.to eq(controller: "foo", bar: "baz") }

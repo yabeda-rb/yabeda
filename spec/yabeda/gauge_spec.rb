@@ -13,7 +13,7 @@ RSpec.describe Yabeda::Gauge do
     ::Yabeda.configure do
       gauge :test_gauge
     end
-    Yabeda.configure!
+    Yabeda.configure! unless Yabeda.already_configured?
     allow(Yabeda::Tags).to receive(:build).with(tags, anything).and_return(built_tags)
     ::Yabeda.register_adapter(:test_adapter, adapter)
   end

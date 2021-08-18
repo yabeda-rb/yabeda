@@ -13,7 +13,7 @@ RSpec.describe Yabeda::Counter do
     ::Yabeda.configure do
       counter :test_counter
     end
-    Yabeda.configure!
+    Yabeda.configure! unless Yabeda.already_configured?
     allow(Yabeda::Tags).to receive(:build).with(tags, anything).and_return(built_tags)
     ::Yabeda.register_adapter(:test_adapter, adapter)
   end
