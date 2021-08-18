@@ -5,11 +5,13 @@ require_relative "./base_matcher"
 module Yabeda
   module RSpec
     # Checks whether Yabeda counter was incremented during test run or not
-    # @param metric [Yabeda::Counter] metric
+    # @param metric [Yabeda::Counter,String,Symbol] metric instance or name
+    # @return [Yabeda::RSpec::IncrementYabedaCounter]
     def increment_yabeda_counter(metric)
       IncrementYabedaCounter.new(metric)
     end
 
+    # Custom matcher class with implementation for +increment_yabeda_counter+
     class IncrementYabedaCounter < BaseMatcher
       def by(increment)
         @expected_increment = increment
@@ -18,16 +20,20 @@ module Yabeda
 
       attr_reader :expected_increment
 
+      def initialize(*)
+        super
+        return if metric.is_a? Yabeda::Counter
+
+        raise ArgumentError, "Pass counter instance/name to `increment_yabeda_counter`. Got #{metric.inspect} instead"
+      end
+
       def match(metric, block)
         block.call
 
-        increments = Yabeda::TestAdapter.instance.counters.fetch(metric)
+        increments = filter_matching_changes(Yabeda::TestAdapter.instance.counters.fetch(metric))
 
-        if tags.nil?
-          increments.values.any? { |actual_increment| expected_increment.nil? || values_match?(expected_increment, actual_increment) }
-        else
-          actual_increment = increments.key?(tags) ? increments.fetch(tags) : increments.find(proc { [] }) { |k, _| k >= tags }[1]
-          !actual_increment.nil? && (expected_increment.nil? || values_match?(expected_increment, actual_increment))
+        increments.values.any? do |actual_increment|
+          expected_increment.nil? || values_match?(expected_increment, actual_increment)
         end
       end
 
@@ -41,14 +47,9 @@ module Yabeda
 
         block.call
 
-        increments = Yabeda::TestAdapter.instance.counters.fetch(metric)
+        increments = filter_matching_changes(Yabeda::TestAdapter.instance.counters.fetch(metric))
 
-        if tags.nil?
-          increments.none?
-        else
-          increment = increments.key?(tags) ? increments.fetch(tags) : increments.find(proc { [] }) { |k, _v| k >= tags }[1]
-          increment.nil?
-        end
+        increments.none?
       end
 
       def failure_message

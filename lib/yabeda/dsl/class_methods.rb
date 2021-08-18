@@ -11,7 +11,6 @@ require "yabeda/dsl/metric_builder"
 module Yabeda
   # DSL for ease of work with Yabeda
   module DSL
-    # rubocop: disable Style/Documentation
     module ClassMethods
       # Block for grouping and simplifying configuration of related metrics
       def configure(&block)
@@ -110,6 +109,5 @@ module Yabeda
         group.register_metric(metric)
       end
     end
-    # rubocop: enable Style/Documentation
   end
 end

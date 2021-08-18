@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "yabeda/rspec"
 
 RSpec.describe "Yabeda RSpec matchers" do
@@ -13,127 +15,127 @@ RSpec.describe "Yabeda RSpec matchers" do
 
   describe "#update_yabeda_gauge" do
     it "succeeds when given gauge was updated by any value" do
-      expect {
+      expect do
         Yabeda.test_gauge.set({}, 42)
-      }.to update_yabeda_gauge(Yabeda.test_gauge)
+      end.to update_yabeda_gauge(Yabeda.test_gauge)
     end
 
     it "fails when given gauge wasn't updated" do
-      expect {
-        expect {
+      expect do
+        expect do
           # nothing here
-        }.to update_yabeda_gauge(Yabeda.test_gauge)
-      }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+        end.to update_yabeda_gauge(Yabeda.test_gauge)
+      end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
     end
 
     it "fails when any other gauge was updated" do
-      expect {
-        expect {
+      expect do
+        expect do
           Yabeda.other_gauge.set({}, 42)
-        }.to update_yabeda_gauge(Yabeda.test_gauge)
-      }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+        end.to update_yabeda_gauge(Yabeda.test_gauge)
+      end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
     end
 
     context "with set specified" do
       it "succeeds when given gauge was updated by exact value" do
-        expect {
+        expect do
           Yabeda.test_gauge.set({}, 42)
-        }.to update_yabeda_gauge(Yabeda.test_gauge).with(42)
+        end.to update_yabeda_gauge(Yabeda.test_gauge).with(42)
       end
 
       it "succeeds when given gauge was updated by matching value" do
-        expect {
+        expect do
           Yabeda.test_gauge.set({}, 2)
-        }.to update_yabeda_gauge(Yabeda.test_gauge).with(be_even)
+        end.to update_yabeda_gauge(Yabeda.test_gauge).with(be_even)
       end
 
       it "fails when given gauge was updated with any other value" do
-        expect {
-          expect {
+        expect do
+          expect do
             Yabeda.other_gauge.set({}, 3)
-          }.to update_yabeda_gauge(Yabeda.test_gauge).with(2)
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+          end.to update_yabeda_gauge(Yabeda.test_gauge).with(2)
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
     end
 
     context "with tags specified" do
       it "succeeds when tags are match" do
-        expect {
+        expect do
           Yabeda.test_gauge.set({ foo: :bar }, 42)
-        }.to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar)
+        end.to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar)
       end
 
       it "fails when tags doesn't match" do
-        expect {
-          expect {
+        expect do
+          expect do
             Yabeda.other_gauge.set({ foo: :bar, baz: :qux }, 0)
-          }.to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar, baz: :boom)
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+          end.to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar, baz: :boom)
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
 
       it "succeeds when subset of tags was specified and it matches" do
-        expect {
-          expect {
+        expect do
+          expect do
             Yabeda.other_gauge.set({ foo: :bar, baz: :qux }, 3)
-          }.to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar)
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+          end.to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar)
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
     end
 
     context "with negated expect" do
       it "succeeds when given gauge wasn't updated" do
-        expect {
+        expect do
           # nothing here
-        }.not_to update_yabeda_gauge(Yabeda.test_gauge)
+        end.not_to update_yabeda_gauge(Yabeda.test_gauge)
       end
 
       it "fails when given gauge was updated" do
-        expect {
-          expect {
+        expect do
+          expect do
             Yabeda.test_gauge.set({}, 42)
-          }.not_to update_yabeda_gauge(Yabeda.test_gauge)
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+          end.not_to update_yabeda_gauge(Yabeda.test_gauge)
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
 
       context "with set specified" do
         it "throws error as this behavior can lead to too permissive tests" do
-          expect {
-            expect {
+          expect do
+            expect do
               Yabeda.test_gauge.set({}, 42)
-            }.not_to update_yabeda_gauge(Yabeda.test_gauge).with(42)
-          }.to raise_error(NotImplementedError)
+            end.not_to update_yabeda_gauge(Yabeda.test_gauge).with(42)
+          end.to raise_error(NotImplementedError)
         end
       end
 
       context "with tags specified" do
         it "fails when tags are match" do
-          expect {
-            expect {
+          expect do
+            expect do
               Yabeda.test_gauge.set({ foo: :bar }, 42)
-            }.not_to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar)
-          }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+            end.not_to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar)
+          end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
         end
 
         it "succeeds when tags doesn't match" do
-          expect {
+          expect do
             Yabeda.test_gauge.set({ foo: :bar, baz: :qux }, 5)
-          }.not_to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar, baz: :boom)
+          end.not_to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar, baz: :boom)
         end
 
         it "fails when subset of tags was specified and set tags matches this subset" do
-          expect {
-            expect {
+          expect do
+            expect do
               Yabeda.test_gauge.set({ foo: :bar, baz: :qux }, 0.001)
-            }.not_to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar)
-          }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+            end.not_to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar)
+          end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
         end
       end
     end
 
     it "allows to pass gauge name instead of metric object" do
-      expect {
+      expect do
         Yabeda.test_gauge.set({}, 0)
-      }.to update_yabeda_gauge(:test_gauge).with(be_zero)
+      end.to update_yabeda_gauge(:test_gauge).with(be_zero)
     end
   end
 end

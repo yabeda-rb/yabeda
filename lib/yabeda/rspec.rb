@@ -2,6 +2,12 @@
 
 require_relative "./testing"
 
+module Yabeda
+  # RSpec integration for Yabeda: custom matchers, etc
+  module RSpec
+  end
+end
+
 require_relative "./rspec/increment_yabeda_counter"
 require_relative "./rspec/update_yabeda_gauge"
 require_relative "./rspec/measure_yabeda_histogram"

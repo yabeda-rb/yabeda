@@ -51,6 +51,14 @@ module Yabeda
 
         Yabeda.metrics.fetch(instance_or_name.to_s)
       end
+
+      # Filter metric changes by tags.
+      # If tags specified, treat them as subset of real tags (to avoid bothering with default tags in tests)
+      def filter_matching_changes(changes)
+        return changes if tags.nil?
+
+        changes.filter { |t, _v| t >= tags }
+      end
     end
   end
 end

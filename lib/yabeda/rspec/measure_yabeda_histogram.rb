@@ -5,10 +5,13 @@ require_relative "./base_matcher"
 module Yabeda
   module RSpec
     # Checks whether Yabeda histogram was measured during test run or not
-    def measure_yabeda_histogram(metric = BaseMatcher::U)
+    # @param metric [Yabeda::Histogram,String,Symbol] metric instance or name
+    # @return [Yabeda::RSpec::MeasureYabedaHistogram]
+    def measure_yabeda_histogram(metric)
       MeasureYabedaHistogram.new(metric)
     end
 
+    # Custom matcher class with implementation for +measure_yabeda_histogram+
     class MeasureYabedaHistogram < BaseMatcher
       def with(value)
         @expected_value = value
@@ -17,17 +20,19 @@ module Yabeda
 
       attr_reader :expected_value
 
+      def initialize(*)
+        super
+        return if metric.is_a? Yabeda::Histogram
+
+        raise ArgumentError, "Pass histogram instance/name to `measure_yabeda_histogram`. Got #{metric.inspect} instead"
+      end
+
       def match(metric, block)
         block.call
 
-        measures = Yabeda::TestAdapter.instance.histograms.fetch(metric)
+        measures = filter_matching_changes(Yabeda::TestAdapter.instance.histograms.fetch(metric))
 
-        if tags.nil?
-          measures.values.any? { |measure| expected_value.nil? || values_match?(expected_value, measure) }
-        else
-          measure = measures.key?(tags) ? measures.fetch(tags) : measures.find(proc { [] }) { |k, _| k >= tags }[1]
-          !measure.nil? && (expected_value.nil? || values_match?(expected_value, measure))
-        end
+        measures.values.any? { |measure| expected_value.nil? || values_match?(expected_value, measure) }
       end
 
       def match_when_negated(metric, block)
@@ -40,14 +45,9 @@ module Yabeda
 
         block.call
 
-        measures = Yabeda::TestAdapter.instance.histograms.fetch(metric)
+        measures = filter_matching_changes(Yabeda::TestAdapter.instance.histograms.fetch(metric))
 
-        if tags.nil?
-          measures.none?
-        else
-          measure = measures.key?(tags) ? measures.fetch(tags) : measures.find(proc { [] }) { |k, _v| k >= tags }[1]
-          measure.nil?
-        end
+        measures.none?
       end
 
       def failure_message

@@ -5,10 +5,13 @@ require_relative "./base_matcher"
 module Yabeda
   module RSpec
     # Checks whether Yabeda gauge was set to some value during test run or not
+    # @param metric [Yabeda::Gauge,String,Symbol] metric instance or name
+    # @return [Yabeda::RSpec::UpdateYabedaGauge]
     def update_yabeda_gauge(metric)
       UpdateYabedaGauge.new(metric)
     end
 
+    # Custom matcher class with implementation for +update_yabeda_gauge+
     class UpdateYabedaGauge < BaseMatcher
       def with(value)
         @expected_value = value
@@ -17,17 +20,19 @@ module Yabeda
 
       attr_reader :expected_value
 
+      def initialize(*)
+        super
+        return if metric.is_a? Yabeda::Gauge
+
+        raise ArgumentError, "Pass gauge instance/name to `update_yabeda_gauge`. Got #{metric.inspect} instead"
+      end
+
       def match(metric, block)
         block.call
 
-        updates = Yabeda::TestAdapter.instance.gauges.fetch(metric)
+        updates = filter_matching_changes(Yabeda::TestAdapter.instance.gauges.fetch(metric))
 
-        if tags.nil?
-          updates.values.any? { |increment| expected_value.nil? || values_match?(expected_value, increment) }
-        else
-          update = updates.key?(tags) ? updates.fetch(tags) : updates.find(proc { [] }) { |k, _| k >= tags }[1]
-          !update.nil? && (expected_value.nil? || values_match?(expected_value, update))
-        end
+        updates.values.any? { |update| expected_value.nil? || values_match?(expected_value, update) }
       end
 
       def match_when_negated(metric, block)
@@ -40,14 +45,9 @@ module Yabeda
 
         block.call
 
-        updates = Yabeda::TestAdapter.instance.gauges.fetch(metric)
+        updates = filter_matching_changes(Yabeda::TestAdapter.instance.gauges.fetch(metric))
 
-        if tags.nil?
-          updates.none?
-        else
-          update = updates.key?(tags) ? updates.fetch(tags) : updates.find(proc { [] }) { |k, _v| k >= tags }[1]
-          update.nil?
-        end
+        updates.none?
       end
 
       def failure_message
