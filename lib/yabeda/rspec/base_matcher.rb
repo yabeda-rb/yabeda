@@ -57,7 +57,7 @@ module Yabeda
       def filter_matching_changes(changes)
         return changes if tags.nil?
 
-        changes.filter { |t, _v| t >= tags }
+        changes.select { |t, _v| t >= tags }
       end
     end
   end
