@@ -1,8 +1,10 @@
-require_relative './testing'
+# frozen_string_literal: true
 
-require_relative './rspec/be_incremented'
-require_relative './rspec/be_set'
-require_relative './rspec/be_measured'
+require_relative "./testing"
+
+require_relative "./rspec/increment_yabeda_counter"
+require_relative "./rspec/update_yabeda_gauge"
+require_relative "./rspec/measure_yabeda_histogram"
 
 ::RSpec.configure do |config|
   config.before(:suite) do

@@ -1,26 +1,33 @@
+# frozen_string_literal: true
+
 module Yabeda
   module RSpec
+    # Notes:
+    #  +expected+ is always a metric instance
+    #  +actual+ is always a block of code
+    # Example:
+    #  expect { anything }.to do_whatever_with_yabeda_metric(Yabeda.something)
     class BaseMatcher < ::RSpec::Matchers::BuiltIn::BaseMatcher
       attr_reader :tags, :metric
 
+      # Specify a scope of labels (tags). Subset of tags can be specified.
       def with_tags(tags)
         @tags = tags
         self
       end
 
-      def matches?(actual)
-        unless actual.is_a? Yabeda::Metric
-          raise ArgumentError, "Pass metric instance to expect (e.g. `expect(Yabeda.metric_name)`). Got #{actual.inspect} instead"
-        end
-        @metric = @actual = actual
-        match(expected, actual)
+      def initialize(expected)
+        @expected = @metric = resolve_metric(expected)
+      rescue KeyError
+        raise ArgumentError, <<~MSG
+          Pass metric name or metric instance to matcher (e.g. `increment_yabeda_counter(Yabeda.metric_name)` or \
+          increment_yabeda_counter('metric_name')). Got #{expected.inspect} instead
+        MSG
       end
 
+      # RSpec doesn't define this method, but it is more convenient to rely on +match_when_negated+ method presence
       def does_not_match?(actual)
-        unless actual.is_a? Yabeda::Metric
-          raise ArgumentError, "Pass metric instance to expect (e.g. `expect(Yabeda.metric_name)`). Got #{actual.inspect} instead"
-        end
-        @metric = @actual = actual
+        @actual = actual
         if respond_to?(:match_when_negated)
           match_when_negated(expected, actual)
         else
@@ -28,9 +35,21 @@ module Yabeda
         end
       end
 
-      # Pretty print metric name (actual is expected to be a Yabeda metric instance)
-      def actual_formatted
+      def supports_block_expectations?
+        true
+      end
+
+      # Pretty print metric name (expected is expected to always be a Yabeda metric instance)
+      def expected_formatted
         "Yabeda.#{[metric.group, metric.name].compact.join('.')}"
+      end
+
+      private
+
+      def resolve_metric(instance_or_name)
+        return instance_or_name if instance_or_name.is_a? Yabeda::Metric
+
+        Yabeda.metrics.fetch(instance_or_name.to_s)
       end
     end
   end

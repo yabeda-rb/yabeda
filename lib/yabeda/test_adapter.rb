@@ -4,8 +4,8 @@ require "singleton"
 
 require_relative "./base_adapter"
 
-# Fake monitoring system adapter that collects all metric values
 module Yabeda
+  # Fake monitoring system adapter that collects latest metric values for later inspection
   class TestAdapter < BaseAdapter
     include Singleton
 
