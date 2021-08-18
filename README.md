@@ -162,6 +162,44 @@ Config key | Type     | Default | Description |
 
 These are only enabled in debug mode. To enable it either set `debug` config key to `true` (e.g. by specifying `YABEDA_DEBUG=true` in your environment variables or executing `Yabeda.debug!` in your code).
 
+## Testing
+
+### RSpec
+
+Add the following to your `rails_helper.rb` (or `spec_helper.rb`):
+
+```ruby
+require "yabeda/rspec"
+```
+
+Now you can use `increment_yabeda_counter`, `update_yabeda_gauge`, and `measure_yabeda_histogram` matchers:
+
+```ruby
+it "increments counters" do
+  expect { subject }.to increment_yabeda_counter(Yabeda.myapp.foo_count).by(3)
+end
+```
+
+You can scope metrics by used tags with `with_tags`:
+
+```ruby
+it "updates gauges" do
+  expect { subject }.to \
+    update_yabeda_gauge("some_gauge_name").
+    with_tags(method: "command", command: "subscribe")
+end
+```
+
+Note that tags you specified doesn't need to be exact, but can be a subset of tags used on metric update. In this example updates with following sets of tags `{ method: "command", command: "subscribe", status: "SUCCESS" }` and `{ method: "command", command: "subscribe", status: "FAILURE" }` will make test example to pass.
+
+And check for values with `by` for counters, `to` for gauges, and `with` for gauges and histograms (and you [can use other matchers here](https://relishapp.com/rspec/rspec-expectations/v/3-10/docs/composing-matchers)):
+
+```ruby
+expect { subject }.to \
+  measure_yabeda_histogram(Yabeda.something.anything_runtime).
+  with(be_between(0.005, 0.05))
+```
+
 ## Roadmap (aka TODO or Help wanted)
 
  - Ability to change metric settings for individual adapters
