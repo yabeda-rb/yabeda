@@ -1,4 +1,4 @@
-name: Run tests
+name: Tests
 
 on:
   pull_request:
@@ -10,16 +10,18 @@ on:
 
 jobs:
   test:
-    name: "Run tests"
+    name: "Ruby ${{ matrix.ruby }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         include:
-          - ruby: 3.0
-          - ruby: 2.7
-          - ruby: 2.6
-          - ruby: 2.5
+          - ruby: "3.0"
+          - ruby: "2.7"
+          - ruby: "2.6"
+          - ruby: "2.5"
+          - ruby: "2.4"
+          - ruby: "2.3"
     container:
       image: ruby:${{ matrix.ruby }}
       env:
