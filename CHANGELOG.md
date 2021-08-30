@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.10.1 - 2021-08-30
+
+### Fixed
+
+- Compatibility with anyway_config 1.x gem (which is automatically used on older Rubies, older then minimal Ruby 2.5 for anyway_config 2.x)
+
 ## 0.10.0 - 2021-07-21
 
 ### Added
