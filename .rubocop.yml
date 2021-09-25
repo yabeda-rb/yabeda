@@ -23,6 +23,12 @@ RSpec/LetSetup:
 RSpec/MultipleExpectations:
   Enabled: false
 
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 4
+
 Bundler/OrderedGems:
   Enabled: false
 
@@ -52,3 +58,6 @@ Style/HashTransformKeys:
 
 Style/HashTransformValues:
   Enabled: true
+
+Style/Documentation:
+  Enabled: false

@@ -11,7 +11,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
           group :group2
           histogram :test_histogram, buckets: [1, 10, 100]
         end
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       it "defines metric method on the root object" do
@@ -36,7 +36,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
           group(:group1) { gauge(:test_gauge) }
           histogram(:test_histogram, buckets: [1, 10, 100])
         end
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       it "defines metric method on the root object" do
@@ -63,7 +63,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
     context "when properly configured" do
       before do
         Yabeda.configure { counter(:test_counter) }
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       it("defines method on root object") { is_expected.to be_a(Yabeda::Counter) }
@@ -76,7 +76,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
     context "when properly configured" do
       before do
         Yabeda.configure { gauge(:test_gauge) }
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       it("defines method on root object") { is_expected.to be_a(Yabeda::Gauge) }
@@ -89,7 +89,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
     context "when properly configured" do
       before do
         Yabeda.configure { histogram(:test_histogram, buckets: [1, 10, 100]) }
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       it("defines method on root object") { is_expected.to be_a(Yabeda::Histogram) }
@@ -102,7 +102,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
     context "when default tag configured" do
       before do
         Yabeda.configure { default_tag :environment, "test" }
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       it { is_expected.to eq(environment: "test") }
@@ -111,7 +111,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
     context "with a specified group that does not exist" do
       before do
         Yabeda.configure { default_tag :environment, "test", group: :missing_group }
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       it "creates the group" do
@@ -131,7 +131,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
           default_tag :key, "value"
           gauge :test_gauge, comment: "..."
         end
-        Yabeda.configure!
+        Yabeda.configure! unless Yabeda.already_configured?
       end
 
       it "defines all the tags" do
