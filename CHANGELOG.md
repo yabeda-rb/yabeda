@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.11.0 - 2021-09-25
+
 ### Added
 
 - RSpec matchers `increment_yabeda_counter`, `update_yabeda_gauge`, and `measure_yabeda_histogram` for convenient testing. [#25](https://github.com/yabeda-rb/yabeda/pull/25) by [@Envek][]
