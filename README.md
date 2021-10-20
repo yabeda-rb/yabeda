@@ -1,8 +1,7 @@
 # ![Yabeda](./yabeda-logo.png)
 
 [![Gem Version](https://badge.fury.io/rb/yabeda.svg)](https://rubygems.org/gems/yabeda)
-
-**This software is Work in Progress: features will appear and disappear, API will be changed, your feedback is always welcome!**
+[![Tests status](https://github.com/yabeda-rb/yabeda/actions/workflows/test.yml/badge.svg)](https://github.com/yabeda-rb/yabeda/actions/workflows/test.yml)
 
 Extendable solution for easy setup of monitoring in your Ruby apps.
 
@@ -18,6 +17,11 @@ Most of the time you don't need to add this gem to your Gemfile directly (unless
 
 ```ruby
 gem 'yabeda'
+
+# Add some plugins to quickly start collecting some essential metrics:
+# gem 'yabeda-rails'
+# gem 'yabeda-sidekiq'
+
 # Then add monitoring system adapter, e.g.:
 # gem 'yabeda-prometheus'
 ```
