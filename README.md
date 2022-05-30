@@ -135,6 +135,7 @@ These are developed and maintained by other awesome folks:
 ### Maintained by Yabeda
 
  - [yabeda-rails] — basic request metrics for [Ruby on Rails](https://rubyonrails.org/) applications.
+ - [yabeda-activerecord] — query performance and connection pool stats for apps using ActiveRecord to query databases.
  - [yabeda-sidekiq] — comprehensive set of metrics for monitoring [Sidekiq](https://sidekiq.org/) jobs execution and queues.
  - [yabeda-faktory] — metrics for monitoring jobs execution by Ruby workers of [Faktory](https://contribsys.com/faktory/).
  - [yabeda-graphql] — metrics to query and field-level monitoring for apps using [GraphQL-Ruby](https://graphql-ruby.org/).
@@ -271,6 +272,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/yabeda
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
 [yabeda-rails]: https://github.com/yabeda-rb/yabeda-rails/ "Yabeda plugin for collecting and exporting basic metrics for Rails applications"
+[yabeda-activerecord]: https://github.com/yabeda-rb/yabeda-activerecord/ "Yabeda plugin to collect query performance metrics and connection pool statistics"
 [yabeda-sidekiq]: https://github.com/yabeda-rb/yabeda-sidekiq/ "Yabeda plugin for complete monitoring of Sidekiq metrics"
 [yabeda-faktory]: https://github.com/yabeda-rb/yabeda-faktory/ "Yabeda plugin for complete monitoring of Faktory Ruby Workers"
 [yabeda-graphql]: https://github.com/yabeda-rb/yabeda-graphql/ "Measure and understand how good your GraphQL-Ruby application works"
