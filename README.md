@@ -128,6 +128,7 @@ And then execute:
 These are developed and maintained by other awesome folks:
 
  - [Statsd](https://github.com/asusikov/yabeda-statsd)
+ - [AWS CloudWatch](https://github.com/retsef/yabeda-cloudwatch)
  - _…and more! You can write your own adapter and open a pull request to add it into this list._
 
 ## Available plugins to collect metrics
