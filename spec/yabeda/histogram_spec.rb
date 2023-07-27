@@ -6,17 +6,17 @@ RSpec.describe Yabeda::Histogram do
   let(:tags) { { foo: "bar" } }
   let(:metric_value) { 10 }
   let(:block) { proc { 1 + 1 } }
-  let(:histogram) { ::Yabeda.test_histogram }
+  let(:histogram) { Yabeda.test_histogram }
   let(:built_tags) { { built_foo: "built_bar" } }
-  let(:adapter) { instance_double("Yabeda::BaseAdapter", perform_histogram_measure!: true, register!: true) }
+  let(:adapter) { instance_double(Yabeda::BaseAdapter, perform_histogram_measure!: true, register!: true) }
 
   before do
-    ::Yabeda.configure do
+    Yabeda.configure do
       histogram :test_histogram, buckets: [1, 10, 100]
     end
     Yabeda.configure! unless Yabeda.already_configured?
     allow(Yabeda::Tags).to receive(:build).with(tags, anything).and_return(built_tags)
-    ::Yabeda.register_adapter(:test_adapter, adapter)
+    Yabeda.register_adapter(:test_adapter, adapter)
   end
 
   context "with value given" do

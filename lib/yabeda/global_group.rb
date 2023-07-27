@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "forwardable"
-require_relative "./group"
+require_relative "group"
 
 module Yabeda
   # Represents implicit global group

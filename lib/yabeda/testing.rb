@@ -2,6 +2,6 @@
 
 # Include this file to get things prepared for testing
 
-require_relative "./test_adapter"
+require_relative "test_adapter"
 
 Yabeda.register_adapter(:test, Yabeda::TestAdapter.instance)

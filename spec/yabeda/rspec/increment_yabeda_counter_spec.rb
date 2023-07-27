@@ -5,7 +5,7 @@ require "yabeda/rspec"
 RSpec.describe "Yabeda RSpec matchers" do
   before do
     Yabeda.reset!
-    ::Yabeda.configure do
+    Yabeda.configure do
       counter :test_counter
       counter :other_counter
     end

@@ -17,6 +17,7 @@ module Yabeda
       end
 
       def initialize(expected)
+        super
         @expected = @metric = resolve_metric(expected)
       rescue KeyError
         raise ArgumentError, <<~MSG

@@ -5,17 +5,17 @@ RSpec.describe Yabeda::Counter do
 
   let(:tags) { { foo: "bar" } }
   let(:metric_value) { 10 }
-  let(:counter) { ::Yabeda.test_counter }
+  let(:counter) { Yabeda.test_counter }
   let(:built_tags) { { built_foo: "built_bar" } }
-  let(:adapter) { instance_double("Yabeda::BaseAdapter", perform_counter_increment!: true, register!: true) }
+  let(:adapter) { instance_double(Yabeda::BaseAdapter, perform_counter_increment!: true, register!: true) }
 
   before do
-    ::Yabeda.configure do
+    Yabeda.configure do
       counter :test_counter
     end
     Yabeda.configure! unless Yabeda.already_configured?
     allow(Yabeda::Tags).to receive(:build).with(tags, anything).and_return(built_tags)
-    ::Yabeda.register_adapter(:test_adapter, adapter)
+    Yabeda.register_adapter(:test_adapter, adapter)
   end
 
   it { expect(increment_counter).to eq(metric_value) }

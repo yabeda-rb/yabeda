@@ -5,17 +5,17 @@ RSpec.describe Yabeda::Gauge do
 
   let(:tags) { { foo: "bar" } }
   let(:metric_value) { 10 }
-  let(:gauge) { ::Yabeda.test_gauge }
+  let(:gauge) { Yabeda.test_gauge }
   let(:built_tags) { { built_foo: "built_bar" } }
-  let(:adapter) { instance_double("Yabeda::BaseAdapter", perform_gauge_set!: true, register!: true) }
+  let(:adapter) { instance_double(Yabeda::BaseAdapter, perform_gauge_set!: true, register!: true) }
 
   before do
-    ::Yabeda.configure do
+    Yabeda.configure do
       gauge :test_gauge
     end
     Yabeda.configure! unless Yabeda.already_configured?
     allow(Yabeda::Tags).to receive(:build).with(tags, anything).and_return(built_tags)
-    ::Yabeda.register_adapter(:test_adapter, adapter)
+    Yabeda.register_adapter(:test_adapter, adapter)
   end
 
   it { expect(set_gauge).to eq(metric_value) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./base_matcher"
+require_relative "base_matcher"
 
 module Yabeda
   module RSpec
@@ -54,16 +54,16 @@ module Yabeda
 
       def failure_message
         "expected #{expected_formatted} " \
-        "to be incremented #{"by #{description_of(expected_increment)} " unless expected_increment.nil?}" \
-        "#{("with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags)}" \
-        "but #{actual_increments_message}"
+          "to be incremented #{"by #{description_of(expected_increment)} " unless expected_increment.nil?}" \
+          "#{"with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags}" \
+          "but #{actual_increments_message}"
       end
 
       def failure_message_when_negated
         "expected #{expected_formatted} " \
-        "not to be incremented " \
-        "#{("with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags)}" \
-        "but #{actual_increments_message}"
+          "not to be incremented " \
+          "#{"with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags}" \
+          "but #{actual_increments_message}"
       end
 
       def actual_increments_message

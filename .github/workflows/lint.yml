@@ -1,0 +1,32 @@
+name: Lint Ruby
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "gemfiles/*"
+      - "Gemfile"
+      - "**/*.rb"
+      - "**/*.gemspec"
+      - ".github/workflows/lint.yml"
+  pull_request:
+    paths:
+      - "gemfiles/*"
+      - "Gemfile"
+      - "**/*.rb"
+      - "**/*.gemspec"
+      - ".github/workflows/lint.yml"
+
+jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.2
+        bundler-cache: true
+    - name: Lint Ruby code with RuboCop
+      run: |
+        bundle exec rubocop

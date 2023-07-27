@@ -10,6 +10,9 @@ Metrics/BlockLength:
   - "Gemfile"
   - "spec/**/*"
 
+Metrics/AbcSize:
+  Max: 25
+
 Layout/LineLength:
   Max: 120
 
@@ -28,6 +31,9 @@ RSpec/DescribeClass:
 
 RSpec/NestedGroups:
   Max: 4
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
 
 Bundler/OrderedGems:
   Enabled: false

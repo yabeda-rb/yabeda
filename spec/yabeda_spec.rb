@@ -2,7 +2,7 @@
 
 RSpec.describe Yabeda do
   it "has a version number" do
-    expect(Yabeda::VERSION).not_to be nil
+    expect(Yabeda::VERSION).not_to be_nil
   end
 
   it "exposes the public api" do
@@ -10,7 +10,7 @@ RSpec.describe Yabeda do
     expect(described_class.adapters).to eq({})
     expect(described_class.collectors).to eq([])
     expect(described_class.default_tags).to eq({})
-    expect(described_class.configured?).to eq(false)
+    expect(described_class.configured?).to be(false)
   end
 
   describe ".configure!" do
@@ -46,7 +46,7 @@ RSpec.describe Yabeda do
     subject(:collect!) { described_class.collect! }
 
     let(:adapter) do
-      instance_double("Yabeda::BaseAdapter", perform_histogram_measure!: true, register!: true, debug!: true)
+      instance_double(Yabeda::BaseAdapter, perform_histogram_measure!: true, register!: true, debug!: true)
     end
     let(:collector) do
       proc do
@@ -57,13 +57,13 @@ RSpec.describe Yabeda do
 
     before do
       collect_block = collector
-      ::Yabeda.configure do
+      described_class.configure do
         histogram :test, buckets: [42]
         collect(&collect_block)
       end
       allow(collect_block).to receive(:source_location).and_return(["/somewhere/metrics.rb", 25])
       described_class.configure!
-      ::Yabeda.register_adapter(:test_adapter, adapter)
+      described_class.register_adapter(:test_adapter, adapter)
     end
 
     after do

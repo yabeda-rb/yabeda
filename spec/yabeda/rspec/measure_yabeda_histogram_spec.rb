@@ -5,7 +5,7 @@ require "yabeda/rspec"
 RSpec.describe "Yabeda RSpec matchers" do
   before do
     Yabeda.reset!
-    ::Yabeda.configure do
+    Yabeda.configure do
       histogram :test_histogram, buckets: [1, 10, 100]
       histogram :other_histogram, buckets: [1, 10, 100]
     end

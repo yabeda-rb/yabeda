@@ -86,7 +86,7 @@ module Yabeda
 
     # Perform configuration: registration of metrics and collector blocks
     # @return [void]
-    # rubocop: disable Metrics/MethodLength, Metrics/AbcSize
+    # rubocop: disable Metrics/MethodLength
     def configure!
       raise(AlreadyConfiguredError, @configured_by) if already_configured?
 
@@ -129,12 +129,11 @@ module Yabeda
 
       true
     end
-    # rubocop: enable Metrics/MethodLength, Metrics/AbcSize
+    # rubocop: enable Metrics/MethodLength
 
     # Forget all the configuration.
     # For testing purposes as it doesn't rollback changes in adapters.
     # @api private
-    # rubocop: disable Metrics/AbcSize
     def reset!
       default_tags.clear
       adapters.clear
@@ -147,6 +146,5 @@ module Yabeda
       instance_variable_set(:@configured_by, nil)
       instance_variable_set(:@debug_was_enabled_by, nil)
     end
-    # rubocop: enable Metrics/AbcSize
   end
 end

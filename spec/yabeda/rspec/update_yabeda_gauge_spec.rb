@@ -5,7 +5,7 @@ require "yabeda/rspec"
 RSpec.describe "Yabeda RSpec matchers" do
   before do
     Yabeda.reset!
-    ::Yabeda.configure do
+    Yabeda.configure do
       gauge :test_gauge
       gauge :other_gauge
     end

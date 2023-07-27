@@ -2,7 +2,7 @@
 
 require "singleton"
 
-require_relative "./base_adapter"
+require_relative "base_adapter"
 
 module Yabeda
   # Fake monitoring system adapter that collects latest metric values for later inspection
@@ -12,6 +12,7 @@ module Yabeda
     attr_reader :counters, :gauges, :histograms
 
     def initialize
+      super
       @counters   = Hash.new { |ch, ck| ch[ck] = Hash.new { |th, tk| th[tk] = 0 } }
       @gauges     = Hash.new { |gh, gk| gh[gk] = Hash.new { |th, tk| th[tk] = nil } }
       @histograms = Hash.new { |hh, hk| hh[hk] = Hash.new { |th, tk| th[tk] = nil } }

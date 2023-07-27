@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./base_matcher"
+require_relative "base_matcher"
 
 module Yabeda
   module RSpec
@@ -52,16 +52,16 @@ module Yabeda
 
       def failure_message
         "expected #{expected_formatted} " \
-        "to be changed #{"to #{expected_value} " unless expected_value.nil?}" \
-        "#{("with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags)}" \
-        "but #{actual_changes_message}"
+          "to be changed #{"to #{expected_value} " unless expected_value.nil?}" \
+          "#{"with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags}" \
+          "but #{actual_changes_message}"
       end
 
       def failure_message_when_negated
         "expected #{expected_formatted} " \
-        "not to be changed " \
-        "#{("with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags)}" \
-        "but #{actual_changes_message}"
+          "not to be changed " \
+          "#{"with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags}" \
+          "but #{actual_changes_message}"
       end
 
       def actual_changes_message
