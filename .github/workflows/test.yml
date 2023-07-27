@@ -16,12 +16,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - ruby: "3.2"
+          - ruby: "3.1"
           - ruby: "3.0"
           - ruby: "2.7"
-          - ruby: "2.6"
-          - ruby: "2.5"
-          - ruby: "2.4"
-          - ruby: "2.3"
     container:
       image: ruby:${{ matrix.ruby }}
       env:
@@ -35,8 +33,6 @@ jobs:
           restore-keys: |
             bundle-${{ matrix.ruby }}-${{ hashFiles('**/*.gemspec') }}-${{ hashFiles('**/Gemfile') }}
             bundle-${{ matrix.ruby }}-
-      - name: Upgrade Bundler to 2.0 (for older Rubies)
-        run: gem install bundler -v '~> 2.0'
       - name: Bundle install
         run: |
           bundle config path vendor/bundle
