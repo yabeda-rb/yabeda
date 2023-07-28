@@ -43,6 +43,7 @@ And then execute:
           comment "How long whistles are being active"
           unit :seconds
         end
+        summary :bells_ringing_duration, unit: :seconds, comment: "How long bells are ringing"
       end
     end
     ```
@@ -181,7 +182,7 @@ Add the following to your `rails_helper.rb` (or `spec_helper.rb`):
 require "yabeda/rspec"
 ```
 
-Now you can use `increment_yabeda_counter`, `update_yabeda_gauge`, and `measure_yabeda_histogram` matchers:
+Now you can use `increment_yabeda_counter`, `update_yabeda_gauge`, `measure_yabeda_histogram`, and `observe_yabeda_summary` matchers:
 
 ```ruby
 it "increments counters" do
@@ -201,7 +202,7 @@ end
 
 Note that tags you specified doesn't need to be exact, but can be a subset of tags used on metric update. In this example updates with following sets of tags `{ method: "command", command: "subscribe", status: "SUCCESS" }` and `{ method: "command", command: "subscribe", status: "FAILURE" }` will make test example to pass.
 
-And check for values with `by` for counters, `to` for gauges, and `with` for gauges and histograms (and you [can use other matchers here](https://relishapp.com/rspec/rspec-expectations/v/3-10/docs/composing-matchers)):
+And check for values with `by` for counters, `to` for gauges, and `with` for histograms and summaries (and you [can use other matchers here](https://relishapp.com/rspec/rspec-expectations/v/3-10/docs/composing-matchers)):
 
 ```ruby
 expect { subject }.to \

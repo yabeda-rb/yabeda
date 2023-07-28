@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.12.0 - 2023-07-28
+
+### Added
+
+- Summary metric type (mostly for Prometheus adapter).
+
 ## 0.11.0 - 2021-09-25
 
 ### Added

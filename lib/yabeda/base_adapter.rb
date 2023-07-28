@@ -8,6 +8,7 @@ module Yabeda
       when Counter   then register_counter!(metric)
       when Gauge     then register_gauge!(metric)
       when Histogram then register_histogram!(metric)
+      when Summary   then register_summary!(metric)
       else raise "#{metric.class} is unknown metric type"
       end
     end
@@ -34,6 +35,14 @@ module Yabeda
 
     def perform_histogram_measure!(_metric, _tags, _value)
       raise NotImplementedError, "#{self.class} doesn't support measuring histograms"
+    end
+
+    def register_summary!(_metric)
+      raise NotImplementedError, "#{self.class} doesn't support summaries as metric type!"
+    end
+
+    def perform_summary_observe!(_metric, _tags, _value)
+      raise NotImplementedError, "#{self.class} doesn't support observing summaries"
     end
 
     # Hook to enable debug mode in adapters when it is enabled in Yabeda itself

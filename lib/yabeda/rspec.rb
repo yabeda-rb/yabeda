@@ -11,6 +11,7 @@ end
 require_relative "rspec/increment_yabeda_counter"
 require_relative "rspec/update_yabeda_gauge"
 require_relative "rspec/measure_yabeda_histogram"
+require_relative "rspec/observe_yabeda_summary"
 
 RSpec.configure do |config|
   config.before(:suite) do

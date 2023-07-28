@@ -4,6 +4,7 @@ require "yabeda/metric"
 require "yabeda/counter"
 require "yabeda/gauge"
 require "yabeda/histogram"
+require "yabeda/summary"
 require "yabeda/group"
 require "yabeda/global_group"
 require "yabeda/dsl/metric_builder"
@@ -52,6 +53,12 @@ module Yabeda
       # Register a histogram
       def histogram(*args, **kwargs, &block)
         metric = MetricBuilder.new(Histogram).build(args, kwargs, @group, &block)
+        register_metric(metric)
+      end
+
+      # Register a summary
+      def summary(*args, **kwargs, &block)
+        metric = MetricBuilder.new(Summary).build(args, kwargs, @group, &block)
         register_metric(metric)
       end
 

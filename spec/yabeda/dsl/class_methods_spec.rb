@@ -96,6 +96,19 @@ RSpec.describe Yabeda::DSL::ClassMethods do
     end
   end
 
+  describe ".summary" do
+    subject { Yabeda.test_summary }
+
+    context "when properly configured" do
+      before do
+        Yabeda.configure { summary(:test_summary) }
+        Yabeda.configure! unless Yabeda.already_configured?
+      end
+
+      it("defines method on root object") { is_expected.to be_a(Yabeda::Summary) }
+    end
+  end
+
   describe ".default_tag" do
     subject { Yabeda.default_tags }
 
