@@ -137,5 +137,41 @@ RSpec.describe "Yabeda RSpec matchers" do
         Yabeda.test_gauge.set({}, 0)
       end.to update_yabeda_gauge(:test_gauge).with(be_zero)
     end
+
+    context "with expectations specified" do
+      it "succeeds when all expectations are met" do
+        expect do
+          Yabeda.test_gauge.set({ foo: :bar }, 13)
+          Yabeda.test_gauge.set({ foo: :baz }, 42)
+        end.to update_yabeda_gauge(:test_gauge).with(
+          { foo: :bar } => be_within(1).of(13),
+          { foo: :baz } => (be >= 42),
+        )
+      end
+
+      it "fails when some expectations doesn't meet" do
+        expect do
+          expect do
+            Yabeda.test_gauge.set({ foo: :bar }, 13)
+            Yabeda.test_gauge.set({ foo: :baz }, 42)
+          end.to update_yabeda_gauge(:test_gauge).with(
+            { foo: :bar } => be_within(1).of(13),
+            { foo: :baz } => (be >= 43),
+          )
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+      end
+
+      it "fails when no expectations are met" do
+        expect do
+          expect do
+            Yabeda.test_gauge.set({ foo: :bar }, 12)
+            Yabeda.test_gauge.set({ foo: :baz }, 42)
+          end.to update_yabeda_gauge(:test_gauge).with(
+            { foo: :bar } => be_within(1).of(14),
+            { foo: :baz } => (be >= 43),
+          )
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+      end
+    end
   end
 end

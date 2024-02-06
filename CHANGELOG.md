@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+
+- Multiple expectations in RSpec matchers:
+
+  ```ruby
+  expect { whatever }.to increment_yabeda_counter(:my_counter).with(
+    { tag: "foo" } => 1,
+    { tag: "bar" } => (be >= 42),
+  )
+  ```
+
 ## 0.12.0 - 2023-07-28
 
 ### Added

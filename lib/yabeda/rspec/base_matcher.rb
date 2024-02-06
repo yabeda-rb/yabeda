@@ -8,21 +8,30 @@ module Yabeda
     # Example:
     #  expect { anything }.to do_whatever_with_yabeda_metric(Yabeda.something)
     class BaseMatcher < ::RSpec::Matchers::BuiltIn::BaseMatcher
-      attr_reader :tags, :metric
+      attr_reader :tags, :metric, :expectations
 
       # Specify a scope of labels (tags). Subset of tags can be specified.
       def with_tags(tags)
+        raise ArgumentError, "Can't use `with_tags` with expectations hash provided" if !@tags && @expectations&.any?
+
         @tags = tags
+        @expectations = { tags => nil }
         self
       end
 
-      def initialize(expected)
+      def with(expectations)
+        @expectations = expectations || {}
+        self
+      end
+
+      def initialize(metric)
         super
-        @expected = @metric = resolve_metric(expected)
+        @expected = @metric = resolve_metric(metric)
+        @expectations = {}
       rescue KeyError
         raise ArgumentError, <<~MSG
           Pass metric name or metric instance to matcher (e.g. `increment_yabeda_counter(Yabeda.metric_name)` or \
-          increment_yabeda_counter('metric_name')). Got #{expected.inspect} instead
+          increment_yabeda_counter('metric_name')). Got #{metric.inspect} instead
         MSG
       end
 
@@ -56,9 +65,11 @@ module Yabeda
       # Filter metric changes by tags.
       # If tags specified, treat them as subset of real tags (to avoid bothering with default tags in tests)
       def filter_matching_changes(changes)
-        return changes if tags.nil?
+        return changes.map { |tags, change| [tags, [nil, change]] }.to_h unless expectations&.any?
 
-        changes.select { |t, _v| t >= tags }
+        expectations.map do |tags, expected|
+          [tags, [expected, changes.find { |t, _v| t >= tags }&.[](1)]]
+        end.to_h
       end
     end
   end

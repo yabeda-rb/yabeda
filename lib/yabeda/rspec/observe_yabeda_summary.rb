@@ -14,6 +14,8 @@ module Yabeda
     # Custom matcher class with implementation for +observe_yabeda_summary+
     class ObserveYabedaSummary < BaseMatcher
       def with(value)
+        return super if value.is_a?(Hash)
+
         @expected_value = value
         self
       end
@@ -32,7 +34,13 @@ module Yabeda
 
         observations = filter_matching_changes(Yabeda::TestAdapter.instance.summaries.fetch(metric))
 
-        observations.values.any? { |observation| expected_value.nil? || values_match?(expected_value, observation) }
+        return false if observations.empty?
+
+        observations.values.all? do |expected_observation, actual_observation|
+          next !actual_observation.nil? if expected_observation.nil?
+
+          values_match?(expected_observation, actual_observation)
+        end
       end
 
       def match_when_negated(metric, block)
@@ -47,13 +55,16 @@ module Yabeda
 
         observations = filter_matching_changes(Yabeda::TestAdapter.instance.summaries.fetch(metric))
 
-        observations.none?
+        observations.none? { |_tags, (_expected, actual)| !actual.nil? }
       end
 
       def failure_message
         "expected #{expected_formatted} " \
           "to be observed #{"with #{expected} " unless expected_value.nil?}" \
           "#{"with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags}" \
+          "#{if !tags && expectations
+               "with following expectations: #{::RSpec::Support::ObjectFormatter.format(expectations)} "
+             end}" \
           "but #{actual_changes_message}"
       end
 
@@ -61,6 +72,9 @@ module Yabeda
         "expected #{expected_formatted} " \
           "not to be observed " \
           "#{"with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags}" \
+          "#{if !tags && expectations
+               "with following expectations: #{::RSpec::Support::ObjectFormatter.format(expectations)} "
+             end}" \
           "but #{actual_changes_message}"
       end
 

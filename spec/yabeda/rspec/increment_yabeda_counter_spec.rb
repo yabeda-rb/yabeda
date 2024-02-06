@@ -135,5 +135,39 @@ RSpec.describe "Yabeda RSpec matchers" do
         Yabeda.test_counter.increment({}, by: 1)
       end.to increment_yabeda_counter(:test_counter).by(1)
     end
+
+    context "with expectations specified" do
+      it "succeeds when all expectations are met" do
+        expect do
+          Yabeda.test_counter.increment({ tag: :foo }, by: 13)
+          Yabeda.test_counter.increment({ tag: :bar }, by: 42)
+        end.to increment_yabeda_counter(Yabeda.test_counter).with(
+          { tag: :foo } => 13,
+          { tag: :bar } => (be >= 42),
+        )
+      end
+
+      it "fails when some expectations doesn't meet" do
+        expect do
+          expect do
+            Yabeda.test_counter.increment({ tag: :bar }, by: 42)
+          end.to increment_yabeda_counter(Yabeda.test_counter).with(
+            { tag: :foo } => 13,
+            { tag: :bar } => (be >= 42),
+          )
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+      end
+
+      it "fails when no expectations are met" do
+        expect do
+          expect do
+            Yabeda.test_counter.increment({ tag: :bar }, by: 13)
+          end.to increment_yabeda_counter(Yabeda.test_counter).with(
+            { tag: :foo } => 13,
+            { tag: :bar } => (be >= 42),
+          )
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+      end
+    end
   end
 end

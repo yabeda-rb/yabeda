@@ -137,5 +137,39 @@ RSpec.describe "Yabeda RSpec matchers" do
         Yabeda.test_summary.observe({}, 0.013)
       end.to observe_yabeda_summary(:test_summary).with(0.01..0.02)
     end
+
+    context "with expectations specified" do
+      it "succeeds when all expectations are met" do
+        expect do
+          Yabeda.test_summary.observe({ tag: :foo }, 13)
+          Yabeda.test_summary.observe({ tag: :bar }, 42)
+        end.to observe_yabeda_summary(:test_summary).with(
+          { tag: :foo } => 13,
+          { tag: :bar } => (be >= 42),
+        )
+      end
+
+      it "fails when some expectations doesn't meet" do
+        expect do
+          expect do
+            Yabeda.test_summary.observe({ tag: :foo }, 13)
+          end.to observe_yabeda_summary(:test_summary).with(
+            { tag: :foo } => 13,
+            { tag: :bar } => (be >= 42),
+          )
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+      end
+
+      it "fails when no expectations are met" do
+        expect do
+          expect do
+            Yabeda.test_summary.observe({ tag: :foo }, 13)
+          end.to observe_yabeda_summary(:test_summary).with(
+            { tag: :foo } => 14,
+            { tag: :bar } => (be >= 42),
+          )
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+      end
+    end
   end
 end

@@ -210,6 +210,15 @@ expect { subject }.to \
   with(be_between(0.005, 0.05))
 ```
 
+You also can specify multiple tags and their expected values in `with`:
+
+```ruby
+expect { whatever }.to increment_yabeda_counter(:my_counter).with(
+  { tag: "foo" } => 1,
+  { tag: "bar" } => (be >= 42),
+)
+```
+
 ## Roadmap (aka TODO or Help wanted)
 
  - Ability to change metric settings for individual adapters

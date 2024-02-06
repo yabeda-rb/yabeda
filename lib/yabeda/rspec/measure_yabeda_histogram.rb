@@ -14,6 +14,8 @@ module Yabeda
     # Custom matcher class with implementation for +measure_yabeda_histogram+
     class MeasureYabedaHistogram < BaseMatcher
       def with(value)
+        return super if value.is_a?(Hash)
+
         @expected_value = value
         self
       end
@@ -32,7 +34,13 @@ module Yabeda
 
         measures = filter_matching_changes(Yabeda::TestAdapter.instance.histograms.fetch(metric))
 
-        measures.values.any? { |measure| expected_value.nil? || values_match?(expected_value, measure) }
+        return false if measures.empty?
+
+        measures.values.all? do |expected_measure, actual_measure|
+          next !actual_measure.nil? if expected_measure.nil?
+
+          values_match?(expected_measure, actual_measure)
+        end
       end
 
       def match_when_negated(metric, block)
@@ -47,13 +55,16 @@ module Yabeda
 
         measures = filter_matching_changes(Yabeda::TestAdapter.instance.histograms.fetch(metric))
 
-        measures.none?
+        measures.none? { |_tags, (_expected, actual)| !actual.nil? }
       end
 
       def failure_message
         "expected #{expected_formatted} " \
           "to be changed #{"to #{expected} " unless expected_value.nil?}" \
           "#{"with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags}" \
+          "#{if !tags && expectations
+               "with following expectations: #{::RSpec::Support::ObjectFormatter.format(expectations)} "
+             end}" \
           "but #{actual_changes_message}"
       end
 
@@ -61,6 +72,9 @@ module Yabeda
         "expected #{expected_formatted} " \
           "not to be incremented " \
           "#{"with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags}" \
+          "#{if !tags && expectations
+               "with following expectations: #{::RSpec::Support::ObjectFormatter.format(expectations)} "
+             end}" \
           "but #{actual_changes_message}"
       end
 

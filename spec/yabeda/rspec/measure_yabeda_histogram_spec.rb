@@ -137,5 +137,41 @@ RSpec.describe "Yabeda RSpec matchers" do
         Yabeda.test_histogram.measure({}, 0.013)
       end.to measure_yabeda_histogram(:test_histogram).with(0.01..0.02)
     end
+
+    context "with expectations specified" do
+      it "succeeds when all expectations are met" do
+        expect do
+          Yabeda.test_histogram.measure({ tag: :foo }, 13.00001)
+          Yabeda.test_histogram.measure({ tag: :bar }, 42)
+        end.to measure_yabeda_histogram(Yabeda.test_histogram).with(
+          { tag: :foo } => be_within(1).of(13),
+          { tag: :bar } => (be >= 42),
+        )
+      end
+
+      it "fails when some expectations doesn't meet" do
+        expect do
+          expect do
+            Yabeda.test_histogram.measure({ tag: :foo }, 13.00001)
+            Yabeda.test_histogram.measure({ tag: :bar }, 41)
+          end.to measure_yabeda_histogram(Yabeda.test_histogram).with(
+            { tag: :foo } => be_within(1).of(13),
+            { tag: :bar } => (be >= 42),
+          )
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+      end
+
+      it "fails when no expectations are met" do
+        expect do
+          expect do
+            Yabeda.test_histogram.measure({ tag: :foo }, 13.00001)
+            Yabeda.test_histogram.measure({ tag: :bar }, 41)
+          end.to measure_yabeda_histogram(Yabeda.test_histogram).with(
+            { tag: :foo } => 13,
+            { tag: :bar } => 42,
+          )
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+      end
+    end
   end
 end

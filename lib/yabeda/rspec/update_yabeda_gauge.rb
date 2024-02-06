@@ -14,6 +14,8 @@ module Yabeda
     # Custom matcher class with implementation for +update_yabeda_gauge+
     class UpdateYabedaGauge < BaseMatcher
       def with(value)
+        return super if value.is_a?(Hash)
+
         @expected_value = value
         self
       end
@@ -32,7 +34,13 @@ module Yabeda
 
         updates = filter_matching_changes(Yabeda::TestAdapter.instance.gauges.fetch(metric))
 
-        updates.values.any? { |update| expected_value.nil? || values_match?(expected_value, update) }
+        return false if updates.empty?
+
+        updates.values.all? do |expected_update, actual_update|
+          next !actual_update.nil? if expected_update.nil?
+
+          expected_update.nil? || values_match?(expected_update, actual_update)
+        end
       end
 
       def match_when_negated(metric, block)
@@ -47,13 +55,16 @@ module Yabeda
 
         updates = filter_matching_changes(Yabeda::TestAdapter.instance.gauges.fetch(metric))
 
-        updates.none?
+        updates.none? { |_tags, (_expected, actual)| !actual.nil? }
       end
 
       def failure_message
         "expected #{expected_formatted} " \
           "to be changed #{"to #{expected_value} " unless expected_value.nil?}" \
           "#{"with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags}" \
+          "#{if !tags && expectations
+               "with following expectations: #{::RSpec::Support::ObjectFormatter.format(expectations)} "
+             end}" \
           "but #{actual_changes_message}"
       end
 
@@ -61,6 +72,9 @@ module Yabeda
         "expected #{expected_formatted} " \
           "not to be changed " \
           "#{"with tags #{::RSpec::Support::ObjectFormatter.format(tags)} " if tags}" \
+          "#{if !tags && expectations
+               "with following expectations: #{::RSpec::Support::ObjectFormatter.format(expectations)} "
+             end}" \
           "but #{actual_changes_message}"
       end
 
