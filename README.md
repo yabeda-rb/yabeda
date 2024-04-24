@@ -157,6 +157,7 @@ These are developed and maintained by other awesome folks:
  - [yabeda-activejob](https://github.com/Fullscript/yabeda-activejob) — backend-agnostic metrics for background jobs.
  - [yabeda-shoryuken](https://github.com/retsef/yabeda-shoryuken) — metrics for [Shoryuken](https://github.com/ruby-shoryuken/shoryuken) jobs execution message queues.
  - [yabeda-rack-ratelimit](https://github.com/basecamp/yabeda-rack-ratelimit) — metrics for [Rack::Ratelimit](https://github.com/jeremy/rack-ratelimit)
+ - [yabeda-hanami](https://github.com/mlibrary/yabeda-hanami) — metrics for [Hanami](https://hanamirb.org/) The web, with simplicity.
  - _…and more! You can write your own adapter and open a pull request to add it into this list._
 
 ## Configuration
