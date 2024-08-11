@@ -156,4 +156,26 @@ RSpec.describe Yabeda::DSL::ClassMethods do
       end
     end
   end
+
+  describe ".configure" do
+    subject(:configure) { Yabeda.configure(&block) }
+
+    let(:block) { proc { histogram :test_histogram, buckets: [42] } }
+
+    before do
+      Yabeda.configure! unless Yabeda.configured?
+    end
+
+    it "register metric" do
+      configure
+
+      expect(Yabeda.test_histogram).to be_a(Yabeda::Histogram)
+    end
+
+    context "when got metric with adapter option" do
+      let(:block) { proc { histogram :invalid_test, buckets: [42], adapter: :invalid } }
+
+      it { expect { configure }.to raise_error(Yabeda::ConfigurationError, /invalid adapter option in metric/) }
+    end
+  end
 end

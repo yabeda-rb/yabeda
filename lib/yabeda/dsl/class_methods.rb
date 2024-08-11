@@ -99,7 +99,8 @@ module Yabeda
         ::Yabeda.define_singleton_method(name) { metric }
         ::Yabeda.metrics[name] = metric
         register_group_for(metric) if metric.group
-        ::Yabeda.adapters.each_value { |adapter| adapter.register!(metric) } if ::Yabeda.configured?
+        register_metric_for_adapters(metric) if ::Yabeda.configured?
+
         metric
       end
 
@@ -114,6 +115,15 @@ module Yabeda
         ::Yabeda.define_singleton_method(metric.group) { group } unless ::Yabeda.respond_to?(metric.group)
 
         group.register_metric(metric)
+      end
+
+      def register_metric_for_adapters(metric)
+        return ::Yabeda.adapters.each_value { |adapter| adapter.register!(metric) } if metric.adapter.nil?
+
+        adapter = ::Yabeda.adapters[metric.adapter]
+        raise ConfigurationError, "invalid adapter option in metric #{metric.inspect}" if adapter.nil?
+
+        adapter.register!(metric)
       end
     end
   end

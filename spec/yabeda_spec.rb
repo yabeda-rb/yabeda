@@ -23,6 +23,28 @@ RSpec.describe Yabeda do
 
       it { expect { configure! }.to raise_error(Yabeda::AlreadyConfiguredError) }
     end
+
+    context "when set valid adapter option in metric" do
+      let(:adapter) { instance_double(Yabeda::BaseAdapter, register!: true) }
+
+      before do
+        Yabeda.configure { counter(:test_counter, adapter: :test_adapter) }
+        Yabeda.register_adapter(:test_adapter, adapter)
+      end
+
+      it { expect { configure! }.to change(described_class, :configured?).to(true) }
+    end
+
+    context "when set invalid adapter option in metric" do
+      let(:adapter) { instance_double(Yabeda::BaseAdapter) }
+
+      before do
+        Yabeda.configure { counter(:test_counter, adapter: :invalid) }
+        Yabeda.register_adapter(:test_adapter, adapter)
+      end
+
+      it { expect { configure! }.to raise_error(Yabeda::ConfigurationError, /invalid adapter option in metric/) }
+    end
   end
 
   describe ".debug!" do
@@ -92,6 +114,37 @@ RSpec.describe Yabeda do
         expect(adapter).to have_received(:perform_histogram_measure!).with(
           described_class.yabeda.collect_duration, { location: "/somewhere/metrics.rb:25" }, be_between(0.005, 0.05),
         )
+      end
+    end
+  end
+
+  describe ".register_adapter" do
+    subject(:register_adapter) { described_class.register_adapter(name, adapter) }
+
+    let(:name) { :test_adapter }
+    let(:adapter) { instance_double(Yabeda::BaseAdapter, register!: true) }
+
+    before do
+      described_class.configure { histogram :test, buckets: [42] }
+      described_class.configure! unless Yabeda.configured?
+    end
+
+    it "register metric for adapter" do
+      register_adapter
+
+      expect(adapter).to have_received(:register!).with(described_class.test)
+    end
+
+    context "when not configured" do
+      before do
+        described_class.reset!
+        described_class.configure { histogram :test, buckets: [42], adapter: :invalid }
+      end
+
+      it "does not register metric for adapter" do
+        register_adapter
+
+        expect(adapter).not_to have_received(:register!)
       end
     end
   end
