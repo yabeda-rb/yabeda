@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Ability to change metrics setting for individual adapter
+
+## 0.13.0 - 2024-08-12
+
+### Added
+
 - Multiple expectations in RSpec matchers:
 
   ```ruby

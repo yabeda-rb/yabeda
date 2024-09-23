@@ -29,7 +29,7 @@ module Yabeda
       end
     end
 
-    # @return [Hash<String, Yabeda::BaseAdapter>] All loaded adapters
+    # @return [Hash<Symbol, Yabeda::BaseAdapter>] All loaded adapters
     def adapters
       @adapters ||= Concurrent::Hash.new
     end
@@ -72,6 +72,7 @@ module Yabeda
         next if metric.adapter && metric.adapter != name
 
         instance.register!(metric)
+        metric.restrict_adapter! if metric.adapter == name
       end
     end
 

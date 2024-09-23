@@ -25,22 +25,22 @@ RSpec.describe Yabeda do
     end
 
     context "when set valid adapter option in metric" do
-      let(:adapter) { instance_double(Yabeda::BaseAdapter, register!: true) }
+      let(:adapter) { instance_double(Yabeda::BaseAdapter, register!: true, debug!: true) }
 
       before do
-        Yabeda.configure { counter(:test_counter, adapter: :test_adapter) }
-        Yabeda.register_adapter(:test_adapter, adapter)
+        described_class.configure { counter(:test_counter, adapter: :test_adapter) }
+        described_class.register_adapter(:test_adapter, adapter)
       end
 
       it { expect { configure! }.to change(described_class, :configured?).to(true) }
     end
 
     context "when set invalid adapter option in metric" do
-      let(:adapter) { instance_double(Yabeda::BaseAdapter) }
+      let(:adapter) { instance_double(Yabeda::BaseAdapter, register!: true, debug!: true) }
 
       before do
-        Yabeda.configure { counter(:test_counter, adapter: :invalid) }
-        Yabeda.register_adapter(:test_adapter, adapter)
+        described_class.configure { counter(:test_counter, adapter: :invalid) }
+        described_class.register_adapter(:test_adapter, adapter)
       end
 
       it { expect { configure! }.to raise_error(Yabeda::ConfigurationError, /invalid adapter option in metric/) }
@@ -126,7 +126,7 @@ RSpec.describe Yabeda do
 
     before do
       described_class.configure { histogram :test, buckets: [42] }
-      described_class.configure! unless Yabeda.configured?
+      described_class.configure! unless described_class.configured?
     end
 
     it "register metric for adapter" do
@@ -145,6 +145,22 @@ RSpec.describe Yabeda do
         register_adapter
 
         expect(adapter).not_to have_received(:register!)
+      end
+    end
+
+    context "when added another adapter" do
+      let(:another_adapter_name) { :another_test_adapter }
+      let(:another_adapter) { instance_double(Yabeda::BaseAdapter, register!: true) }
+
+      before do
+        described_class.register_adapter(another_adapter_name, another_adapter)
+      end
+
+      it "changes available adapters in registered metric" do
+        aggregate_failures do
+          expect { register_adapter }.to change(described_class.test.adapters, :size).by(1)
+          expect(another_adapter).to have_received(:register!)
+        end
       end
     end
   end

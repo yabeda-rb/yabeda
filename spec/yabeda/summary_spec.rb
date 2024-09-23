@@ -54,4 +54,26 @@ RSpec.describe Yabeda::Summary do
       expect { observe_summary }.to raise_error(ArgumentError)
     end
   end
+
+  context "with adapter option" do
+    let(:summary) { Yabeda.summary_with_adapter }
+    let(:another_adapter) { instance_double(Yabeda::BaseAdapter, perform_summary_observe!: true, register!: true) }
+
+    before do
+      Yabeda.register_adapter(:another_adapter, another_adapter)
+      Yabeda.configure do
+        summary :summary_with_adapter, adapter: :test_adapter
+      end
+      Yabeda.configure! unless Yabeda.already_configured?
+    end
+
+    it "execute perform_counter_increment! method of adapter with name :test_adapter" do
+      observe_summary
+
+      aggregate_failures do
+        expect(adapter).to have_received(:perform_summary_observe!).with(summary, built_tags, metric_value)
+        expect(another_adapter).not_to have_received(:perform_summary_observe!)
+      end
+    end
+  end
 end

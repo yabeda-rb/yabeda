@@ -120,10 +120,7 @@ module Yabeda
       def register_metric_for_adapters(metric)
         return ::Yabeda.adapters.each_value { |adapter| adapter.register!(metric) } if metric.adapter.nil?
 
-        adapter = ::Yabeda.adapters[metric.adapter]
-        raise ConfigurationError, "invalid adapter option in metric #{metric.inspect}" if adapter.nil?
-
-        adapter.register!(metric)
+        metric.restrict_adapter!
       end
     end
   end

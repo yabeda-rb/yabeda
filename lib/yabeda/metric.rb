@@ -14,7 +14,9 @@ module Yabeda
     option :per,     optional: true, comment: "Per which unit is measured `unit`. E.g. `call` as in seconds per call"
     option :group,   optional: true, comment: "Category name for grouping metrics"
     option :aggregation, optional: true, comment: "How adapters should aggregate values from different processes"
-    option :adapter, optional: true, comment: "Which adapter apply the indicator settings."
+    # rubocop:disable Layout/LineLength
+    option :adapter, optional: true, comment: "Monitoring system adapter to register metric in and report metric values to (other adapters won't be used)"
+    # rubocop:enable Layout/LineLength
 
     # Returns the value for the given label set
     def get(labels = {})
@@ -26,13 +28,30 @@ module Yabeda
     end
 
     # Returns allowed tags for metric (with account for global and group-level +default_tags+)
-    # @return Array<Symbol>
+    # @return [Array<Symbol>]
     def tags
       (Yabeda.groups[group].default_tags.keys + Array(super)).uniq
     end
 
     def inspect
       "#<#{self.class.name}: #{[@group, @name].compact.join('.')}>"
+    end
+
+    # Returns the metric adapters
+    # @return [Hash<Symbol, Yabeda::BaseAdapter>]
+    def adapters
+      @adapters ||= ::Yabeda.adapters
+    end
+
+    # @return [Hash<Symbol, Yabeda::BaseAdapter> | null]
+    def restrict_adapter!
+      return if adapter.nil?
+
+      adapter_slice = ::Yabeda.adapters.slice(adapter)
+      raise ConfigurationError, "invalid adapter option in metric #{inspect}" if adapter_slice.empty?
+
+      adapter_slice[adapter].register!(self)
+      @adapters = adapter_slice
     end
   end
 end

@@ -24,4 +24,26 @@ RSpec.describe Yabeda::Counter do
     increment_counter
     expect(adapter).to have_received(:perform_counter_increment!).with(counter, built_tags, metric_value)
   end
+
+  context "with adapter option" do
+    let(:counter) { Yabeda.counter_with_adapter }
+    let(:another_adapter) { instance_double(Yabeda::BaseAdapter, perform_counter_increment!: true, register!: true) }
+
+    before do
+      Yabeda.register_adapter(:another_adapter, another_adapter)
+      Yabeda.configure do
+        counter :counter_with_adapter, adapter: :test_adapter
+      end
+      Yabeda.configure! unless Yabeda.already_configured?
+    end
+
+    it "execute perform_counter_increment! method of adapter with name :test_adapter" do
+      increment_counter
+
+      aggregate_failures do
+        expect(adapter).to have_received(:perform_counter_increment!).with(counter, built_tags, metric_value)
+        expect(another_adapter).not_to have_received(:perform_counter_increment!)
+      end
+    end
+  end
 end

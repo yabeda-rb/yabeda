@@ -18,7 +18,7 @@ module Yabeda
 
       all_tags = ::Yabeda::Tags.build(tags, group)
       values[all_tags] = value
-      ::Yabeda.adapters.each do |_, adapter|
+      adapters.each_value do |adapter|
         adapter.perform_summary_observe!(self, all_tags, value)
       end
       value
