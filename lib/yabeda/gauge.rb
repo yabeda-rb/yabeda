@@ -6,8 +6,8 @@ module Yabeda
     def set(tags, value)
       all_tags = ::Yabeda::Tags.build(tags, group)
       values[all_tags] = value
-      ::Yabeda.adapters.each do |_, adapter|
-        adapter.perform_gauge_set!(self, all_tags, value)
+      ::Yabeda.adapters.each do |adapter_name, adapter|
+        adapter.perform_gauge_set!(self, all_tags, value) if can_access_for_adapter?(adapter_name)
       end
       value
     end

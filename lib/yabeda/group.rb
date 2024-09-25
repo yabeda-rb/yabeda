@@ -7,6 +7,8 @@ module Yabeda
   class Group
     extend Dry::Initializer
 
+    attr_accessor :only_for_adapter
+
     param :name
 
     def default_tags

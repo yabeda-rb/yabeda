@@ -68,7 +68,7 @@ module Yabeda
     def register_adapter(name, instance)
       adapters[name] = instance
       # NOTE: Pretty sure there is race condition
-      metrics.each do |_, metric|
+      metrics.each_value do |metric|
         instance.register!(metric)
       end
     end

@@ -38,6 +38,16 @@ module Yabeda
         @group = nil
       end
 
+      def adapter(adapter_name)
+        @adapter_name = adapter_name
+        yield if block_given?
+      end
+
+      def include_group(group_name)
+        group = Yabeda.groups[group_name] || Yabeda::Group.new(group_name)
+        group.only_for_adapter = @adapter_name
+      end
+
       # Register a growing-only counter
       def counter(*args, **kwargs, &block)
         metric = MetricBuilder.new(Counter).build(args, kwargs, @group, &block)

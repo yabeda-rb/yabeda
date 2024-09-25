@@ -10,50 +10,89 @@ RSpec.describe Yabeda::Histogram do
   let(:built_tags) { { built_foo: "built_bar" } }
   let(:adapter) { instance_double(Yabeda::BaseAdapter, perform_histogram_measure!: true, register!: true) }
 
-  before do
-    Yabeda.configure do
-      histogram :test_histogram, buckets: [1, 10, 100]
+  before { Yabeda.configure! unless Yabeda.already_configured? }
+
+  context "when config has no group" do
+    before do
+      Yabeda.configure do
+        histogram :test_histogram, buckets: [1, 10, 100]
+      end
+      allow(Yabeda::Tags).to receive(:build).with(tags, anything).and_return(built_tags)
+      Yabeda.register_adapter(:test_adapter, adapter)
     end
-    Yabeda.configure! unless Yabeda.already_configured?
-    allow(Yabeda::Tags).to receive(:build).with(tags, anything).and_return(built_tags)
-    Yabeda.register_adapter(:test_adapter, adapter)
+
+    context "with value given" do
+      it { is_expected.to eq(metric_value) }
+
+      it "execute perform_histogram_measure! method of adapter" do
+        measure_histogram
+        expect(adapter).to have_received(:perform_histogram_measure!).with(histogram, built_tags, metric_value)
+      end
+    end
+
+    context "with block given" do
+      subject(:measure_histogram) { histogram.measure(tags, &block) }
+
+      let(:block) { proc { sleep(0.02) } }
+
+      it { is_expected.to be_between(0.01, 0.05) } # Ruby can sleep more or less than requested
+
+      it "execute perform_histogram_measure! method of adapter" do
+        measure_histogram
+        expect(adapter).to \
+          have_received(:perform_histogram_measure!).with(histogram, built_tags, be_between(0.01, 0.05))
+      end
+    end
+
+    context "with both value and block provided" do
+      subject(:measure_histogram) { histogram.measure(tags, metric_value, &block) }
+
+      it "raises an argument error" do
+        expect { measure_histogram }.to raise_error(ArgumentError)
+      end
+    end
+
+    context "with both value and block omitted" do
+      subject(:measure_histogram) { histogram.measure(tags) }
+
+      it "raises an argument error" do
+        expect { measure_histogram }.to raise_error(ArgumentError)
+      end
+    end
   end
 
-  context "with value given" do
-    it { is_expected.to eq(metric_value) }
+  context "when config contains include_group" do
+    before do
+      Yabeda.configure do
+        group :mushrooms do
+          histogram :champignon_histogram, buckets: [1, 10, 100]
+        end
 
-    it "execute perform_histogram_measure! method of adapter" do
-      measure_histogram
-      expect(adapter).to have_received(:perform_histogram_measure!).with(histogram, built_tags, metric_value)
+        adapter :basket_adapter do
+          include_group :mushrooms
+        end
+      end
     end
-  end
 
-  context "with block given" do
-    subject(:measure_histogram) { histogram.measure(tags, &block) }
+    let(:tags) { { type: "champignon" } }
+    let(:histogram) { Yabeda.mushrooms.champignon_histogram }
 
-    let(:block) { proc { sleep(0.02) } }
+    context "when adapter_name is equal to only_for_adapter" do
+      before { Yabeda.register_adapter(:basket_adapter, adapter) }
 
-    it { is_expected.to be_between(0.01, 0.05) } # Ruby can sleep more or less than requested
-
-    it "execute perform_histogram_measure! method of adapter" do
-      measure_histogram
-      expect(adapter).to have_received(:perform_histogram_measure!).with(histogram, built_tags, be_between(0.01, 0.05))
+      it "execute perform_histogram_measure! method of adapter" do
+        measure_histogram
+        expect(adapter).to have_received(:perform_histogram_measure!).with(histogram, tags, metric_value)
+      end
     end
-  end
 
-  context "with both value and block provided" do
-    subject(:measure_histogram) { histogram.measure(tags, metric_value, &block) }
+    context "when adapter_name is non equal to only_for_adapter" do
+      before { Yabeda.register_adapter(:test_adapter, adapter) }
 
-    it "raises an argument error" do
-      expect { measure_histogram }.to raise_error(ArgumentError)
-    end
-  end
-
-  context "with both value and block omitted" do
-    subject(:measure_histogram) { histogram.measure(tags) }
-
-    it "raises an argument error" do
-      expect { measure_histogram }.to raise_error(ArgumentError)
+      it "don't execute perform_histogram_measure! method of adapter" do
+        measure_histogram
+        expect(adapter).not_to have_received(:perform_histogram_measure!).with(histogram, tags, metric_value)
+      end
     end
   end
 end

@@ -156,4 +156,41 @@ RSpec.describe Yabeda::DSL::ClassMethods do
       end
     end
   end
+
+  describe ".adapter" do
+    context "when block don't given" do
+      it "return nil" do
+        expect(Yabeda.adapter(:test_adapter_name)).to be_nil
+      end
+    end
+
+    context "when block given" do
+      it "return block result" do
+        expect(Yabeda.adapter(:test_adapter_name) { 1 + 1 }).to eq 2
+      end
+    end
+  end
+
+  describe ".include_group" do
+    let(:adapter_and_include_group) do
+      lambda do
+        Yabeda.configure do
+          group :test_group do
+            counter :test_counter
+          end
+
+          adapter :test_adapter_name do
+            include_group :test_group
+          end
+        end
+        Yabeda.configure! unless Yabeda.already_configured?
+      end
+    end
+
+    it "set only_for_adapter value for group" do
+      expect(Yabeda.groups[:test_group]).to be_nil
+      adapter_and_include_group.call
+      expect(Yabeda.groups[:test_group].only_for_adapter).to eq :test_adapter_name
+    end
+  end
 end

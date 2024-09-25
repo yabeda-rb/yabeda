@@ -33,5 +33,9 @@ module Yabeda
     def inspect
       "#<#{self.class.name}: #{[@group, @name].compact.join('.')}>"
     end
+
+    def can_access_for_adapter?(adapter_name)
+      [adapter_name, nil].include?(Yabeda.groups[group].only_for_adapter)
+    end
   end
 end
