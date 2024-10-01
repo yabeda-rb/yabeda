@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   )
   ```
 
+### Fixed
+
+- Railtie loading to prevent calling methods that have not yet been defined
+
 ## 0.12.0 - 2023-07-28
 
 ### Added
@@ -48,7 +52,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Adapters now should use method `Yabeda.collect!` instead of manual calling of every collector block. 
+- Adapters now should use method `Yabeda.collect!` instead of manual calling of every collector block.
 
 ## 0.9.0 - 2021-05-07
 
