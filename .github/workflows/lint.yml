@@ -3,7 +3,9 @@ name: Lint Ruby
 on:
   push:
     branches:
-      - master
+      - '**'
+    tags-ignore:
+      - 'v*'
     paths:
       - "gemfiles/*"
       - "Gemfile"
@@ -20,12 +22,15 @@ on:
 
 jobs:
   rubocop:
+    # Skip running tests for local pull requests (use push event instead), run only for foreign ones
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login != github.event.pull_request.base.repo.owner.login
+    name: RuboCop
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.2
+        ruby-version: "3.3"
         bundler-cache: true
     - name: Lint Ruby code with RuboCop
       run: |

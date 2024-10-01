@@ -6,7 +6,7 @@ module Yabeda
     def increment(tags, by: 1)
       all_tags = ::Yabeda::Tags.build(tags, group)
       values[all_tags] += by
-      ::Yabeda.adapters.each do |_, adapter|
+      ::Yabeda.adapters.each_value do |adapter|
         adapter.perform_counter_increment!(self, all_tags, by)
       end
       values[all_tags]

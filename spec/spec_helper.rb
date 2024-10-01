@@ -17,6 +17,9 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  config.filter_run focus: true
+  config.run_all_when_everything_filtered = true
+
   config.after do
     Yabeda.reset! # Undo call to +Yabeda.configure!+
   end
