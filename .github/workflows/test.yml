@@ -11,32 +11,23 @@ on:
 jobs:
   test:
     name: "Ruby ${{ matrix.ruby }}"
+    # Skip running tests for local pull requests (use push event instead), run only for foreign ones
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login != github.event.pull_request.base.repo.owner.login
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         include:
+          - ruby: "3.3"
           - ruby: "3.2"
           - ruby: "3.1"
           - ruby: "3.0"
           - ruby: "2.7"
-    container:
-      image: ruby:${{ matrix.ruby }}
-      env:
-        CI: true
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
         with:
-          path: vendor/bundle
-          key: bundle-${{ matrix.ruby }}-${{ hashFiles('**/*.gemspec') }}-${{ hashFiles('**/Gemfile') }}
-          restore-keys: |
-            bundle-${{ matrix.ruby }}-${{ hashFiles('**/*.gemspec') }}-${{ hashFiles('**/Gemfile') }}
-            bundle-${{ matrix.ruby }}-
-      - name: Bundle install
-        run: |
-          bundle config path vendor/bundle
-          bundle install
-          bundle update
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
       - name: Run RSpec
         run: bundle exec rspec
