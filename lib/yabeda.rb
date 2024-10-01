@@ -130,7 +130,6 @@ module Yabeda
 
       true
     end
-    # rubocop: enable Metrics/MethodLength
 
     # Forget all the configuration.
     # For testing purposes as it doesn't rollback changes in adapters.
@@ -144,9 +143,11 @@ module Yabeda
       @metrics = nil
       collectors.clear
       configurators.clear
+      @config = Config.new
       instance_variable_set(:@configured_by, nil)
       instance_variable_set(:@debug_was_enabled_by, nil)
     end
+    # rubocop: enable Metrics/MethodLength
   end
 end
 
