@@ -221,6 +221,32 @@ expect { whatever }.to increment_yabeda_counter(:my_counter).with(
 )
 ```
 
+## Advanced usage
+
+### Limiting metrics and groups to specific adapters
+
+You can limit, which metrics and groups should be available for specific adapter:
+
+```ruby
+Yabeda.configure do
+  group :internal do
+    adapter :prometheus
+
+    counter :foo
+    gauge :bar
+  end
+
+  group :cloud do
+    adapter :newrelic
+
+    counter :baz
+  end
+
+  counter :qux, adapter: :prometheus
+end
+```
+
+
 ## Roadmap (aka TODO or Help wanted)
 
  - Ability to change metric settings for individual adapters
@@ -232,16 +258,6 @@ expect { whatever }.to increment_yabeda_counter(:my_counter).with(
      end
    end
    ```
-
- - Ability to route some metrics only for given adapter:
-
-   ```rb
-   adapter :prometheus do
-     include_group :sidekiq
-   end
-   ```
-
-
 
 ## Development
 

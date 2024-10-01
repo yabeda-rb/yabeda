@@ -9,11 +9,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Ability to change metrics setting for individual adapter
+- Ability to limit some metrics to specific adapters. [#37](https://github.com/yabeda-rb/yabeda/pull/37) by [@Keallar] and [@Envek]
 
-## 0.13.0 - 2024-08-12
+  ```ruby
+  Yabeda.configure do
+    group :cloud do
+      adapter :newrelic, :datadog
 
-### Added
+      counter :foo
+    end
+
+    counter :bar, adapter: :prometheus
+  end
+  ```
 
 - Multiple expectations in RSpec matchers:
 
@@ -161,3 +169,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [@dsalahutdinov]: https://github.com/dsalahutdinov "Dmitry Salahutdinov"
 [@asusikov]: https://github.com/asusikov "Alexander Susikov"
 [@liaden]: https://github.com/liaden "Joel Johnson"
+[@Keallar]: https://github.com/Keallar "Eugene Lysanskiy"
