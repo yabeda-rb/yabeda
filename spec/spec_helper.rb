@@ -2,6 +2,7 @@
 
 require "bundler/setup"
 require "yabeda"
+require "yabeda/base_adapter"
 require "pry"
 
 RSpec.configure do |config|

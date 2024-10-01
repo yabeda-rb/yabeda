@@ -40,18 +40,19 @@ module Yabeda
     # Returns the metric adapters
     # @return [Hash<Symbol, Yabeda::BaseAdapter>]
     def adapters
-      @adapters ||= ::Yabeda.adapters
-    end
+      return ::Yabeda.adapters unless adapter
 
-    # @return [Hash<Symbol, Yabeda::BaseAdapter> | null]
-    def restrict_adapter!
-      return if adapter.nil?
+      @adapters ||= begin
+        adapter_names = Array(adapter)
+        unknown_adapters = adapter_names - ::Yabeda.adapters.keys
 
-      adapter_slice = ::Yabeda.adapters.slice(adapter)
-      raise ConfigurationError, "invalid adapter option in metric #{inspect}" if adapter_slice.empty?
+        if unknown_adapters.any?
+          raise ConfigurationError,
+                "invalid adapter option #{adapter.inspect} in metric #{inspect}"
+        end
 
-      adapter_slice[adapter].register!(self)
-      @adapters = adapter_slice
+        ::Yabeda.adapters.slice(*Array(@adapter))
+      end
     end
   end
 end

@@ -68,10 +68,9 @@ module Yabeda
       adapters[name] = instance
       # NOTE: Pretty sure there is race condition
       metrics.each_value do |metric|
-        next if metric.adapter && metric.adapter != name
+        next unless metric.adapters.key?(name)
 
         instance.register!(metric)
-        metric.restrict_adapter! if metric.adapter == name
       end
     end
 
@@ -103,7 +102,9 @@ module Yabeda
       # Register metrics in adapters after evaluating all configuration blocks
       # to ensure that all global settings (like default tags) will be applied.
       metrics.each_value do |metric|
-        register_metric_for_adapters(metric)
+        metric.adapters.each_value do |adapter|
+          adapter.register!(metric)
+        end
       end
 
       @configured_by = caller_locations(1, 1)[0].to_s

@@ -181,7 +181,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
       context "when option is invalid" do
         let(:block) { proc { histogram :invalid_test, buckets: [42], adapter: :invalid } }
 
-        it { expect { configure }.to raise_error(Yabeda::ConfigurationError, /invalid adapter option in metric/) }
+        it { expect { configure }.to raise_error(Yabeda::ConfigurationError, /invalid adapter option/) }
       end
     end
   end

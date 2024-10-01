@@ -61,22 +61,4 @@ RSpec.describe Yabeda::Metric do
       it { is_expected.to match_array(%i[foo bar baz]) }
     end
   end
-
-  describe "#restrict_adapter!" do
-    subject(:restrict_adapter!) { metric.restrict_adapter! }
-
-    let(:adapter) { instance_double(Yabeda::BaseAdapter, register!: true) }
-
-    before do
-      Yabeda.register_adapter(:test_adapter, adapter)
-    end
-
-    it { is_expected.to be_nil }
-
-    context "when adapter option is configured" do
-      let(:options) { { tags: %i[foo bar], adapter: :test_adapter } }
-
-      it { is_expected.to eq(Yabeda.adapters.slice(:test_adapter)) }
-    end
-  end
 end

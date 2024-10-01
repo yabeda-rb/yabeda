@@ -43,7 +43,7 @@ RSpec.describe Yabeda do
         described_class.register_adapter(:test_adapter, adapter)
       end
 
-      it { expect { configure! }.to raise_error(Yabeda::ConfigurationError, /invalid adapter option in metric/) }
+      it { expect { configure! }.to raise_error(Yabeda::ConfigurationError, /invalid adapter option/) }
     end
   end
 
