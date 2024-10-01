@@ -74,4 +74,26 @@ RSpec.describe Yabeda::Gauge do
       end
     end
   end
+
+  context "with adapter option" do
+    let(:gauge) { Yabeda.gauge_with_adapter }
+    let(:another_adapter) { instance_double(Yabeda::BaseAdapter, perform_gauge_set!: true, register!: true) }
+
+    before do
+      Yabeda.register_adapter(:another_adapter, another_adapter)
+      Yabeda.configure do
+        gauge :gauge_with_adapter, adapter: :test_adapter
+      end
+      Yabeda.configure! unless Yabeda.already_configured?
+    end
+
+    it "execute perform_counter_increment! method of adapter with name :test_adapter" do
+      set_gauge
+
+      aggregate_failures do
+        expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value)
+        expect(another_adapter).not_to have_received(:perform_gauge_set!)
+      end
+    end
+  end
 end

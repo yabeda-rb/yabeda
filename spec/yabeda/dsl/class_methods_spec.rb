@@ -156,4 +156,59 @@ RSpec.describe Yabeda::DSL::ClassMethods do
       end
     end
   end
+
+  describe ".configure" do
+    subject(:configure) { Yabeda.configure(&block) }
+
+    let(:block) { proc { histogram :test_histogram, buckets: [42] } }
+
+    before do
+      Yabeda.register_adapter(:another_adapter, Yabeda::TestAdapter.instance)
+      Yabeda.configure! unless Yabeda.configured?
+    end
+
+    it "register metric" do
+      configure
+
+      expect(Yabeda.test_histogram).to be_a(Yabeda::Histogram)
+    end
+
+    context "when got metric with adapter option" do
+      let(:block) { proc { histogram :invalid_test, buckets: [42], adapter: :another_adapter } }
+
+      it { expect { configure }.not_to raise_error }
+
+      context "when option is invalid" do
+        let(:block) { proc { histogram :invalid_test, buckets: [42], adapter: :invalid } }
+
+        it { expect { configure }.to raise_error(Yabeda::ConfigurationError, /invalid adapter option/) }
+      end
+    end
+  end
+
+  describe ".adapter" do
+    context "when group is not defined" do
+      it "raises an error" do
+        expect do
+          Yabeda.configure { adapter :test }
+          Yabeda.configure! unless Yabeda.already_configured?
+        end.to raise_error(Yabeda::ConfigurationError, /can't be defined outside of group/)
+      end
+    end
+
+    context "with a specified group that does not exist" do
+      before do
+        Yabeda.configure { adapter :test, group: :adapter_group }
+        Yabeda.configure! unless Yabeda.already_configured?
+      end
+
+      it "creates the group" do
+        expect(Yabeda.groups[:adapter_group]).to be_a(Yabeda::Group)
+      end
+
+      it "defines the default tag" do
+        expect(Yabeda.groups[:adapter_group].adapter).to eq(%i[test])
+      end
+    end
+  end
 end

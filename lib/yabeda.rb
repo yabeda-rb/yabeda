@@ -28,7 +28,7 @@ module Yabeda
       end
     end
 
-    # @return [Hash<String, Yabeda::BaseAdapter>] All loaded adapters
+    # @return [Hash<Symbol, Yabeda::BaseAdapter>] All loaded adapters
     def adapters
       @adapters ||= Concurrent::Hash.new
     end
@@ -68,6 +68,8 @@ module Yabeda
       adapters[name] = instance
       # NOTE: Pretty sure there is race condition
       metrics.each_value do |metric|
+        next unless metric.adapters.key?(name)
+
         instance.register!(metric)
       end
     end
@@ -99,8 +101,8 @@ module Yabeda
 
       # Register metrics in adapters after evaluating all configuration blocks
       # to ensure that all global settings (like default tags) will be applied.
-      adapters.each_value do |adapter|
-        metrics.each_value do |metric|
+      metrics.each_value do |metric|
+        metric.adapters.each_value do |adapter|
           adapter.register!(metric)
         end
       end

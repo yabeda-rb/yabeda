@@ -56,4 +56,26 @@ RSpec.describe Yabeda::Histogram do
       expect { measure_histogram }.to raise_error(ArgumentError)
     end
   end
+
+  context "with adapter option" do
+    let(:histogram) { Yabeda.histogram_with_adapter }
+    let(:another_adapter) { instance_double(Yabeda::BaseAdapter, perform_histogram_measure!: true, register!: true) }
+
+    before do
+      Yabeda.register_adapter(:another_adapter, another_adapter)
+      Yabeda.configure do
+        histogram :histogram_with_adapter, adapter: :test_adapter, buckets: [1, 10, 100]
+      end
+      Yabeda.configure! unless Yabeda.already_configured?
+    end
+
+    it "execute perform_counter_increment! method of adapter with name :test_adapter" do
+      measure_histogram
+
+      aggregate_failures do
+        expect(adapter).to have_received(:perform_histogram_measure!).with(histogram, built_tags, metric_value)
+        expect(another_adapter).not_to have_received(:perform_histogram_measure!)
+      end
+    end
+  end
 end
