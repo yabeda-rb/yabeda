@@ -1,4 +1,4 @@
-name: Build and release gem to RubyGems
+name: Build and release gem
 
 on:
   push:
@@ -8,13 +8,17 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      packages: write
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Fetch current tag as annotated. See https://github.com/actions/checkout/issues/290
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
+          ruby-version: "3.3"
       - name: "Extract data from tag: version, message, body"
         id: tag
         run: |
@@ -75,8 +79,8 @@ jobs:
           GEM_HOST_API_KEY: Bearer ${{ secrets.GITHUB_TOKEN }}
         run: |
           gem push yabeda-${{ steps.tag.outputs.version }}.gem --host https://rubygems.pkg.github.com/${{ github.repository_owner }}
+      - name: Configure RubyGems Credentials
+        uses: rubygems/configure-rubygems-credentials@main
       - name: Publish to RubyGems
-        env:
-          GEM_HOST_API_KEY: "${{ secrets.RUBYGEMS_API_KEY }}"
         run: |
           gem push yabeda-${{ steps.tag.outputs.version }}.gem
