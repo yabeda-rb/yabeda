@@ -75,14 +75,8 @@ RSpec.describe Yabeda::Metric do
       Yabeda.register_adapter(another_adapter_name, another_adapter)
     end
 
-    it "returns all adapters" do
-      aggregate_failures do
-        expect(metric_adapters).to eq({
-                                        adapter_name => adapter,
-                                        another_adapter_name => another_adapter,
-                                      })
-        expect(metric_adapters.size).to eq(2)
-      end
+    it "returns default Yabeda adapters by default" do
+      expect(metric_adapters.object_id).to eq(Yabeda.adapters.object_id)
     end
 
     context "when metric has option adapter" do
@@ -102,6 +96,26 @@ RSpec.describe Yabeda::Metric do
 
         it "raises error" do
           expect { metric_adapters }.to raise_error(Yabeda::ConfigurationError, /invalid adapter option/)
+        end
+      end
+    end
+
+    context "when metric has no adapter option but group does" do
+      let(:options) { { group: :adapter_group } }
+
+      before do
+        Yabeda.configure do
+          group(:adapter_group) { adapter :test_adapter }
+        end
+        Yabeda.configure! unless Yabeda.already_configured?
+      end
+
+      it "returns only adapter defined in group" do
+        aggregate_failures do
+          expect(metric_adapters).to eq({
+                                          adapter_name => adapter,
+                                        })
+          expect(metric_adapters.size).to eq(1)
         end
       end
     end

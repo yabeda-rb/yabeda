@@ -51,8 +51,16 @@ module Yabeda
                 "invalid adapter option #{adapter.inspect} in metric #{inspect}"
         end
 
-        ::Yabeda.adapters.slice(*Array(@adapter))
+        ::Yabeda.adapters.slice(*adapter_names)
       end
+    end
+
+    # Redefined option reader to get group-level adapter if not set on metric level
+    # @api private
+    def adapter
+      return ::Yabeda.groups[group]&.adapter if @adapter == Dry::Initializer::UNDEFINED
+
+      super
     end
   end
 end

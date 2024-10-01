@@ -185,4 +185,30 @@ RSpec.describe Yabeda::DSL::ClassMethods do
       end
     end
   end
+
+  describe ".adapter" do
+    context "when group is not defined" do
+      it "raises an error" do
+        expect do
+          Yabeda.configure { adapter :test }
+          Yabeda.configure! unless Yabeda.already_configured?
+        end.to raise_error(Yabeda::ConfigurationError, /can't be defined outside of group/)
+      end
+    end
+
+    context "with a specified group that does not exist" do
+      before do
+        Yabeda.configure { adapter :test, group: :adapter_group }
+        Yabeda.configure! unless Yabeda.already_configured?
+      end
+
+      it "creates the group" do
+        expect(Yabeda.groups[:adapter_group]).to be_a(Yabeda::Group)
+      end
+
+      it "defines the default tag" do
+        expect(Yabeda.groups[:adapter_group].adapter).to eq(%i[test])
+      end
+    end
+  end
 end

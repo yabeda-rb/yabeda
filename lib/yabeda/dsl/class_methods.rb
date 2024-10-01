@@ -92,6 +92,16 @@ module Yabeda
         Thread.current[:yabeda_temporary_tags] ||= {}
       end
 
+      # Limit all group metrics to specific adapters only
+      #
+      # @param adapter_names [Array<Symbol>] Names of adapters to use
+      def adapter(*adapter_names, group: @group)
+        raise ConfigurationError, "Adapter limitation can't be defined outside of group" unless group
+
+        Yabeda.groups[group] ||= Yabeda::Group.new(group)
+        Yabeda.groups[group].adapter(*adapter_names)
+      end
+
       private
 
       def register_metric(metric)

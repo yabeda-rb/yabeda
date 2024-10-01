@@ -19,6 +19,13 @@ module Yabeda
       @default_tags[key] = value
     end
 
+    def adapter(*adapter_names)
+      return @adapter if adapter_names.empty?
+
+      @adapter ||= Concurrent::Array.new
+      @adapter.push(*adapter_names)
+    end
+
     def register_metric(metric)
       define_singleton_method(metric.name) { metric }
     end
