@@ -61,4 +61,49 @@ RSpec.describe Yabeda::Metric do
       it { is_expected.to match_array(%i[foo bar baz]) }
     end
   end
+
+  describe "#adapters" do
+    subject(:metric_adapters) { metric.adapters }
+
+    let(:adapter_name) { :test_adapter }
+    let(:adapter) { instance_double(Yabeda::BaseAdapter, register!: true) }
+    let(:another_adapter_name) { :another_test_adapter }
+    let(:another_adapter) { instance_double(Yabeda::BaseAdapter, register!: true) }
+
+    before do
+      Yabeda.register_adapter(adapter_name, adapter)
+      Yabeda.register_adapter(another_adapter_name, another_adapter)
+    end
+
+    it "returns all adapters" do
+      aggregate_failures do
+        expect(metric_adapters).to eq({
+                                        adapter_name => adapter,
+                                        another_adapter_name => another_adapter,
+                                      })
+        expect(metric_adapters.size).to eq(2)
+      end
+    end
+
+    context "when metric has option adapter" do
+      let(:options) { { tags: %i[foo bar], adapter: :test_adapter } }
+
+      it "returns only defined in option adapter" do
+        aggregate_failures do
+          expect(metric_adapters).to eq({
+                                          adapter_name => adapter,
+                                        })
+          expect(metric_adapters.size).to eq(1)
+        end
+      end
+
+      context "when adapter option is invalid" do
+        let(:options) { { tags: %i[foo bar], adapter: :invalid } }
+
+        it "raises error" do
+          expect { metric_adapters }.to raise_error(Yabeda::ConfigurationError, /invalid adapter option/)
+        end
+      end
+    end
+  end
 end

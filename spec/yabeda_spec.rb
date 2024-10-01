@@ -134,34 +134,5 @@ RSpec.describe Yabeda do
 
       expect(adapter).to have_received(:register!).with(described_class.test)
     end
-
-    context "when not configured" do
-      before do
-        described_class.reset!
-        described_class.configure { histogram :test, buckets: [42], adapter: :invalid }
-      end
-
-      it "does not register metric for adapter" do
-        register_adapter
-
-        expect(adapter).not_to have_received(:register!)
-      end
-    end
-
-    context "when added another adapter" do
-      let(:another_adapter_name) { :another_test_adapter }
-      let(:another_adapter) { instance_double(Yabeda::BaseAdapter, register!: true) }
-
-      before do
-        described_class.register_adapter(another_adapter_name, another_adapter)
-      end
-
-      it "changes available adapters in registered metric" do
-        aggregate_failures do
-          expect { register_adapter }.to change(described_class.test.adapters, :size).by(1)
-          expect(another_adapter).to have_received(:register!)
-        end
-      end
-    end
   end
 end
