@@ -12,11 +12,11 @@ module Yabeda
       value
     end
 
-    def increment(tags, by: 1)
+    def increment(tags = {}, by: 1)
       set(tags, get(tags).to_i + by)
     end
 
-    def decrement(tags, by: 1)
+    def decrement(tags = {}, by: 1)
       set(tags, get(tags).to_i - by)
     end
   end

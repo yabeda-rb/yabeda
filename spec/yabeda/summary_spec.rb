@@ -14,6 +14,7 @@ RSpec.describe Yabeda::Summary do
     Yabeda.configure { summary :test_summary }
     Yabeda.configure! unless Yabeda.already_configured?
     allow(Yabeda::Tags).to receive(:build).with(tags, anything).and_return(built_tags)
+    allow(Yabeda::Tags).to receive(:build).with({}, anything).and_return({})
     Yabeda.register_adapter(:test_adapter, adapter)
   end
 
@@ -36,6 +37,11 @@ RSpec.describe Yabeda::Summary do
     it "execute perform_summary_observe! method of adapter" do
       observe_summary
       expect(adapter).to have_received(:perform_summary_observe!).with(summary, built_tags, be_between(0.01, 0.05))
+    end
+
+    it "observes with empty tags if tags are not provided", :aggregate_failures do
+      summary.observe(&block)
+      expect(adapter).to have_received(:perform_summary_observe!).with(summary, {}, be_between(0.01, 0.05))
     end
   end
 

@@ -7,7 +7,7 @@ module Yabeda
     option :buckets
 
     # rubocop: disable Metrics/MethodLength
-    def measure(tags, value = nil)
+    def measure(tags = {}, value = nil)
       if value.nil? ^ block_given?
         raise ArgumentError, "You must provide either numeric value or block for Yabeda::Histogram#measure!"
       end

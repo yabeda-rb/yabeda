@@ -5,7 +5,7 @@ module Yabeda
   # calculate averages, percentiles, and so on.
   class Summary < Metric
     # rubocop: disable Metrics/MethodLength
-    def observe(tags, value = nil)
+    def observe(tags = {}, value = nil)
       if value.nil? ^ block_given?
         raise ArgumentError, "You must provide either numeric value or block for Yabeda::Summary#observe!"
       end

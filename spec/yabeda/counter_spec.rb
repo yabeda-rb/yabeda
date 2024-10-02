@@ -15,10 +15,15 @@ RSpec.describe Yabeda::Counter do
     end
     Yabeda.configure! unless Yabeda.already_configured?
     allow(Yabeda::Tags).to receive(:build).with(tags, anything).and_return(built_tags)
+    allow(Yabeda::Tags).to receive(:build).with({}, anything).and_return({})
     Yabeda.register_adapter(:test_adapter, adapter)
   end
 
   it { expect(increment_counter).to eq(metric_value) }
+
+  it "increments counter with empty tags if tags are not provided" do
+    expect { counter.increment }.to change { counter.values[{}] }.by(1)
+  end
 
   it "execute perform_counter_increment! method of adapter" do
     increment_counter

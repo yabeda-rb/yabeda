@@ -3,7 +3,7 @@
 module Yabeda
   # Growing-only counter
   class Counter < Metric
-    def increment(tags, by: 1)
+    def increment(tags = {}, by: 1)
       all_tags = ::Yabeda::Tags.build(tags, group)
       values[all_tags] += by
       adapters.each_value do |adapter|

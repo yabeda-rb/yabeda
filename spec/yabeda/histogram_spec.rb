@@ -16,6 +16,7 @@ RSpec.describe Yabeda::Histogram do
     end
     Yabeda.configure! unless Yabeda.already_configured?
     allow(Yabeda::Tags).to receive(:build).with(tags, anything).and_return(built_tags)
+    allow(Yabeda::Tags).to receive(:build).with({}, anything).and_return({})
     Yabeda.register_adapter(:test_adapter, adapter)
   end
 
@@ -38,6 +39,11 @@ RSpec.describe Yabeda::Histogram do
     it "execute perform_histogram_measure! method of adapter" do
       measure_histogram
       expect(adapter).to have_received(:perform_histogram_measure!).with(histogram, built_tags, be_between(0.01, 0.05))
+    end
+
+    it "measures with empty tags if tags are not provided", :aggregate_failures do
+      histogram.measure(&block)
+      expect(adapter).to have_received(:perform_histogram_measure!).with(histogram, {}, be_between(0.01, 0.05))
     end
   end
 

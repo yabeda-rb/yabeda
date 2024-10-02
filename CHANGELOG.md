@@ -32,6 +32,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   )
   ```
 
+### Changed
+
+- Don't require to provide tags for counters and histograms, use empty tags (`{}`) by default. See discussion at [#26](https://github.com/yabeda-rb/yabeda/issues/26). [@Envek]
+
+  ```ruby
+  Yabeda.foo.increment
+  # same as
+  Yabeda.foo.increment({}, by: 1)
+  ```
+
 ### Fixed
 
 - Railtie loading to prevent calling methods that have not yet been defined
