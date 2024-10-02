@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.13.0 - 2024-10-02
+
 ### Added
 
 - Ability to limit some metrics to specific adapters. [#37](https://github.com/yabeda-rb/yabeda/pull/37) by [@Keallar] and [@Envek]
@@ -23,7 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   end
   ```
 
-- Multiple expectations in RSpec matchers:
+- Multiple expectations in RSpec matchers. [@Envek]
 
   ```ruby
   expect { whatever }.to increment_yabeda_counter(:my_counter).with(
@@ -44,7 +46,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Railtie loading to prevent calling methods that have not yet been defined
+- Railtie loading to prevent calling methods that have not yet been defined. [#38](https://github.com/yabeda-rb/yabeda/pull/38) by [@bibendi].
 
 ## 0.12.0 - 2023-07-28
 
@@ -179,4 +181,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [@dsalahutdinov]: https://github.com/dsalahutdinov "Dmitry Salahutdinov"
 [@asusikov]: https://github.com/asusikov "Alexander Susikov"
 [@liaden]: https://github.com/liaden "Joel Johnson"
+[@bibendi]: https://github.com/bibendi "Misha Merkushin"
 [@Keallar]: https://github.com/Keallar "Eugene Lysanskiy"
