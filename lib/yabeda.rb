@@ -13,6 +13,8 @@ require "yabeda/errors"
 module Yabeda
   include DSL
 
+  EMPTY_TAGS = {}.freeze
+
   class << self
     extend Forwardable
 

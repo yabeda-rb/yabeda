@@ -12,11 +12,21 @@ module Yabeda
       value
     end
 
-    def increment(tags = {}, by: 1)
+    # @overload increment(tags = {}, by: 1)
+    #   Convenience method to increment current gauge value for given set of tags by the given increment value
+    #   @param tags Hash{Symbol=>#to_s} tags to identify the gauge
+    #   @param by [Integer] increment value
+    def increment(*args)
+      tags, by = Counter.parse_args(*args)
       set(tags, get(tags).to_i + by)
     end
 
-    def decrement(tags = {}, by: 1)
+    # @overload decrement(tags = {}, by: 1)
+    #   Convenience method to decrement current gauge value for given set of tags by the given decrement value
+    #   @param tags Hash{Symbol=>#to_s} tags to identify the gauge
+    #   @param by [Integer] decrement value
+    def decrement(*args)
+      tags, by = Counter.parse_args(*args)
       set(tags, get(tags).to_i - by)
     end
   end
