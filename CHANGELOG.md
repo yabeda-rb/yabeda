@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.13.1 - 2024-10-11
+
 ### Fixed
 
 - Compatibility with Ruby 2.x, broken in 0.13.0 due to differences of keywords handling in Ruby 2.x for case when method has arguments with default values. [@Envek]
