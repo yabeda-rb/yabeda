@@ -192,7 +192,7 @@ RSpec.describe Yabeda::DSL::ClassMethods do
         expect do
           Yabeda.configure { adapter :test }
           Yabeda.configure! unless Yabeda.already_configured?
-        end.to raise_error(Yabeda::ConfigurationError, /can't be defined outside of group/)
+        end.to raise_error(Yabeda::ConfigurationError, "Should be block passed with call .include_group for example")
       end
     end
 
