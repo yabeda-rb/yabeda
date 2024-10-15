@@ -96,10 +96,23 @@ module Yabeda
       #
       # @param adapter_names [Array<Symbol>] Names of adapters to use
       def adapter(*adapter_names, group: @group)
-        raise ConfigurationError, "Adapter limitation can't be defined outside of group" unless group
+        raise ConfigurationError, "Adapter limitation can't be defined without adapter_names" if adapter_names.empty?
+
+        @adapter_names = adapter_names
+        if group
+          include_group(group)
+        else
+          return yield if block_given?
+
+          raise ConfigurationError, "Should be block passed with call .include_group for example"
+        end
+      end
+
+      def include_group(group)
+        raise ConfigurationError, "Adapter limitation can't be defined without of group name" unless group
 
         Yabeda.groups[group] ||= Yabeda::Group.new(group)
-        Yabeda.groups[group].adapter(*adapter_names)
+        Yabeda.groups[group].adapter(*@adapter_names)
       end
 
       private
