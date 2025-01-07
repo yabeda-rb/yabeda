@@ -2,14 +2,9 @@
 
 RSpec.describe Yabeda::Group do
   let(:name) { nil }
-
   let(:group) { described_class.new(name) }
 
-  before do
-    Yabeda.groups[name] = group
-  end
-
-  after { Yabeda.reset! }
+  before { Yabeda.groups[name] = group }
 
   describe "default tags" do
     context "when on the top level group" do
