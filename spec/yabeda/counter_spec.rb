@@ -2,6 +2,7 @@
 
 RSpec.describe Yabeda::Counter do
   subject(:increment_counter) { counter.increment(tags, by: metric_value) }
+
   let(:tags) { { foo: "bar" } }
   let(:metric_value) { 10 }
   let(:adapter) { instance_double(Yabeda::BaseAdapter, perform_counter_increment!: true, register!: true) }
@@ -16,7 +17,7 @@ RSpec.describe Yabeda::Counter do
     before do
       Yabeda.configure do
         counter :test_counter
-      end     
+      end
       Yabeda.configure! unless Yabeda.already_configured?
     end
 
@@ -80,7 +81,7 @@ RSpec.describe Yabeda::Counter do
 
       it "execute perform_counter_increment! with name :basket_adapter" do
         increment_counter
-  
+
         aggregate_failures do
           expect(basket_adapter).to have_received(:perform_counter_increment!).with(counter, tags, metric_value)
           expect(adapter).not_to have_received(:perform_counter_increment!)
@@ -89,15 +90,25 @@ RSpec.describe Yabeda::Counter do
     end
 
     context "when call .adapter_names without adapter_names args" do
-      it "raises an error" do
+      it "raises an error using include_group construction" do
         expect do
           Yabeda.configure do
             group :mushrooms do
               counter :champignon_counter
             end
 
-            adapter do
-              include_group :mushrooms
+            adapter { include_group :mushrooms }
+          end
+          Yabeda.configure! unless Yabeda.already_configured?
+        end.to raise_error(Yabeda::ConfigurationError, "Adapter limitation can't be defined without adapter_names")
+      end
+
+      it "raises an error using adapter construction into the group block" do
+        expect do
+          Yabeda.configure do
+            group :mushrooms do
+              adapter
+              counter :champignon_counter
             end
           end
           Yabeda.configure! unless Yabeda.already_configured?
@@ -118,25 +129,11 @@ RSpec.describe Yabeda::Counter do
 
       it "execute perform_counter_increment! with name :basket_adapter" do
         increment_counter
-  
+
         aggregate_failures do
           expect(basket_adapter).to have_received(:perform_counter_increment!).with(counter, tags, metric_value)
           expect(adapter).not_to have_received(:perform_counter_increment!)
         end
-      end
-    end
-
-    context "when call .adapter_names without adapter_names args" do
-      it "raises an error" do
-        expect do
-          Yabeda.configure do
-            group :mushrooms do
-              adapter
-              counter :champignon_counter
-            end
-          end
-          Yabeda.configure! unless Yabeda.already_configured?
-        end.to raise_error(Yabeda::ConfigurationError, "Adapter limitation can't be defined without adapter_names")
       end
     end
   end
