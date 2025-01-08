@@ -59,6 +59,31 @@ RSpec.describe Yabeda::Counter do
       Yabeda.register_adapter(:basket_adapter, basket_adapter)
     end
 
+    it "raises an error using include_group construction without adapter_names args" do
+      expect do
+        Yabeda.configure do
+          group :mushrooms do
+            counter :champignon_counter
+          end
+
+          adapter { include_group :mushrooms }
+        end
+        Yabeda.configure! unless Yabeda.already_configured?
+      end.to raise_error(Yabeda::ConfigurationError, "Adapter limitation can't be defined without adapter_names")
+    end
+
+    it "raises an error using adapter construction into the group block without adapter_names args" do
+      expect do
+        Yabeda.configure do
+          group :mushrooms do
+            adapter
+            counter :champignon_counter
+          end
+        end
+        Yabeda.configure! unless Yabeda.already_configured?
+      end.to raise_error(Yabeda::ConfigurationError, "Adapter limitation can't be defined without adapter_names")
+    end
+
     context "when call .adapter method in outside of group" do
       before do
         Yabeda.configure do
@@ -80,33 +105,6 @@ RSpec.describe Yabeda::Counter do
           expect(basket_adapter).to have_received(:perform_counter_increment!).with(counter, tags, metric_value)
           expect(adapter).not_to have_received(:perform_counter_increment!)
         end
-      end
-    end
-
-    context "when call .adapter_names without adapter_names args" do
-      it "raises an error using include_group construction" do
-        expect do
-          Yabeda.configure do
-            group :mushrooms do
-              counter :champignon_counter
-            end
-
-            adapter { include_group :mushrooms }
-          end
-          Yabeda.configure! unless Yabeda.already_configured?
-        end.to raise_error(Yabeda::ConfigurationError, "Adapter limitation can't be defined without adapter_names")
-      end
-
-      it "raises an error using adapter construction into the group block" do
-        expect do
-          Yabeda.configure do
-            group :mushrooms do
-              adapter
-              counter :champignon_counter
-            end
-          end
-          Yabeda.configure! unless Yabeda.already_configured?
-        end.to raise_error(Yabeda::ConfigurationError, "Adapter limitation can't be defined without adapter_names")
       end
     end
 
