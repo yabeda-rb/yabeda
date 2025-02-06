@@ -104,8 +104,10 @@ module Yabeda
         else
           return yield if block_given?
 
-          raise ConfigurationError, "Should be block passed with call .include_group for example"
+          raise ConfigurationError, "Yabeda.adapter should be called either inside group declaration " \
+            "or should have block provided with a call to include_group. No metric group provided."
         end
+      ensure @adapter_names = nil
       end
 
       def include_group(group)

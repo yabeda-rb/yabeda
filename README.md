@@ -246,6 +246,19 @@ Yabeda.configure do
 end
 ```
 
+Or use another DSL to describe this logic:
+
+```ruby
+Yabeda.configure do
+  group :mushrooms do
+    counter :champignon_counter
+  end
+
+  adapter :basket_adapter do
+    include_group :mushrooms
+  end
+end
+```
 
 ## Roadmap (aka TODO or Help wanted)
 
