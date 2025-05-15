@@ -15,7 +15,7 @@ module Yabeda
     class IncrementYabedaCounter < BaseMatcher
       def by(increment)
         @expected_increment = increment
-        @expectations = { tags => increment } if tags
+        @expectations = { tags || {} => increment }
         self
       end
 

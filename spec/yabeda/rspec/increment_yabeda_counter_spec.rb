@@ -52,7 +52,7 @@ RSpec.describe "Yabeda RSpec matchers" do
       it "fails when given counter was incremented with any other value" do
         expect do
           expect do
-            Yabeda.other_counter.increment({})
+            Yabeda.test_counter.increment({})
           end.to increment_yabeda_counter(Yabeda.test_counter).by(2)
         end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
