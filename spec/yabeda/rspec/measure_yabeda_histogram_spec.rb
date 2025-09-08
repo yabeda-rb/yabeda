@@ -52,7 +52,7 @@ RSpec.describe "Yabeda RSpec matchers" do
       it "fails when given histogram was updated with any other value" do
         expect do
           expect do
-            Yabeda.other_histogram.measure({}, 1)
+            Yabeda.test_histogram.measure({}, 1)
           end.to measure_yabeda_histogram(Yabeda.test_histogram).with(2)
         end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
@@ -68,17 +68,15 @@ RSpec.describe "Yabeda RSpec matchers" do
       it "fails when tags doesn't match" do
         expect do
           expect do
-            Yabeda.other_histogram.measure({ foo: :bar, baz: :qux }, 15)
+            Yabeda.test_histogram.measure({ foo: :bar, baz: :qux }, 15)
           end.to measure_yabeda_histogram(Yabeda.test_histogram).with_tags(foo: :bar, baz: :boom)
         end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
 
       it "succeeds when subset of tags was specified and it matches" do
         expect do
-          expect do
-            Yabeda.other_histogram.measure({ foo: :bar, baz: :qux }, 0.001)
-          end.to measure_yabeda_histogram(Yabeda.test_histogram).with_tags(foo: :bar)
-        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+          Yabeda.test_histogram.measure({ foo: :bar, baz: :qux }, 0.001)
+        end.to measure_yabeda_histogram(Yabeda.test_histogram).with_tags(foo: :bar)
       end
     end
 

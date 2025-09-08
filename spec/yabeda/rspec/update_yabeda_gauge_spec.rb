@@ -52,7 +52,7 @@ RSpec.describe "Yabeda RSpec matchers" do
       it "fails when given gauge was updated with any other value" do
         expect do
           expect do
-            Yabeda.other_gauge.set({}, 3)
+            Yabeda.test_gauge.set({}, 3)
           end.to update_yabeda_gauge(Yabeda.test_gauge).with(2)
         end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
@@ -68,17 +68,15 @@ RSpec.describe "Yabeda RSpec matchers" do
       it "fails when tags doesn't match" do
         expect do
           expect do
-            Yabeda.other_gauge.set({ foo: :bar, baz: :qux }, 0)
+            Yabeda.test_gauge.set({ foo: :bar, baz: :qux }, 0)
           end.to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar, baz: :boom)
         end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
 
       it "succeeds when subset of tags was specified and it matches" do
         expect do
-          expect do
-            Yabeda.other_gauge.set({ foo: :bar, baz: :qux }, 3)
-          end.to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar)
-        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+          Yabeda.test_gauge.set({ foo: :bar, baz: :qux }, 3)
+        end.to update_yabeda_gauge(Yabeda.test_gauge).with_tags(foo: :bar)
       end
     end
 

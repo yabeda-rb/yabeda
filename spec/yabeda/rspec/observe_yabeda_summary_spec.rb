@@ -52,7 +52,7 @@ RSpec.describe "Yabeda RSpec matchers" do
       it "fails when given summary was updated with any other value" do
         expect do
           expect do
-            Yabeda.other_summary.observe({}, 1)
+            Yabeda.test_summary.observe({}, 1)
           end.to observe_yabeda_summary(Yabeda.test_summary).with(2)
         end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
@@ -68,17 +68,15 @@ RSpec.describe "Yabeda RSpec matchers" do
       it "fails when tags doesn't match" do
         expect do
           expect do
-            Yabeda.other_summary.observe({ foo: :bar, baz: :qux }, 15)
+            Yabeda.test_summary.observe({ foo: :bar, baz: :qux }, 15)
           end.to observe_yabeda_summary(Yabeda.test_summary).with_tags(foo: :bar, baz: :boom)
         end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
 
       it "succeeds when subset of tags was specified and it matches" do
         expect do
-          expect do
-            Yabeda.other_summary.observe({ foo: :bar, baz: :qux }, 0.001)
-          end.to observe_yabeda_summary(Yabeda.test_summary).with_tags(foo: :bar)
-        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+          Yabeda.test_summary.observe({ foo: :bar, baz: :qux }, 0.001)
+        end.to observe_yabeda_summary(Yabeda.test_summary).with_tags(foo: :bar)
       end
     end
 

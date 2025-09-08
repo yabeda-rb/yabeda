@@ -17,6 +17,7 @@ module Yabeda
         return super if value.is_a?(Hash)
 
         @expected_value = value
+        @expectations = { tags || {} => value }
         self
       end
 
