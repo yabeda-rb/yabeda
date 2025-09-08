@@ -120,7 +120,7 @@ And then execute:
 
  - Prometheus:
    - [yabeda-prometheus](https://github.com/yabeda-rb/yabeda-prometheus) — wraps [official Ruby client for Prometheus](https://github.com/prometheus/client_ruby).
-   - [yabeda-prometheus-mmap](https://github.com/yabeda-rb/yabeda-prometheus-mmap) — wraps [GitLab's fork of Prometheus Ruby client](https://gitlab.com/gitlab-org/prometheus-client-mmap) which may work better for multi-process application servers.
+   - [yabeda-prometheus-mmap](https://github.com/yabeda-rb/yabeda-prometheus-mmap) — wraps [GitLab's fork of Prometheus Ruby client](https://gitlab.com/gitlab-org/ruby/gems/prometheus-client-mmap) which may work better for multi-process application servers.
  - [Datadog](https://github.com/yabeda-rb/yabeda-datadog)
  - [NewRelic](https://github.com/yabeda-rb/yabeda-newrelic)
 
