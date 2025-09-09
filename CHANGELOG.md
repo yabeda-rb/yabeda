@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.13.2 - 2025-09-09
+
+### Fixed
+
+- Fix false positives of rspec matchers [@jbockler][] in [#42](https://github.com/yabeda-rb/yabeda/pull/42)
+
 ## 0.13.1 - 2024-10-11
 
 ### Fixed
@@ -189,3 +195,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [@liaden]: https://github.com/liaden "Joel Johnson"
 [@bibendi]: https://github.com/bibendi "Misha Merkushin"
 [@Keallar]: https://github.com/Keallar "Eugene Lysanskiy"
+[@jbockler]: https://github.com/jbockler "Josch Bockler"
