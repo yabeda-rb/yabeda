@@ -36,7 +36,7 @@ module Yabeda
       end
 
       # RSpec doesn't define this method, but it is more convenient to rely on +match_when_negated+ method presence
-      def does_not_match?(actual)
+      def does_not_match?(actual) # rubocop:disable Naming/PredicatePrefix
         @actual = actual
         if respond_to?(:match_when_negated)
           match_when_negated(expected, actual)

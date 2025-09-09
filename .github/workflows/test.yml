@@ -14,10 +14,14 @@ jobs:
     # Skip running tests for local pull requests (use push event instead), run only for foreign ones
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login != github.event.pull_request.base.repo.owner.login
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.optional || false }}
     strategy:
       fail-fast: false
       matrix:
         include:
+          - ruby: head
+            optional: true
+          - ruby: "3.4"
           - ruby: "3.3"
           - ruby: "3.2"
           - ruby: "3.1"
