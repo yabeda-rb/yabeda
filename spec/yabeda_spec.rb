@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Yabeda do
+  before { described_class.reset! }
+
   it "has a version number" do
     expect(Yabeda::VERSION).not_to be_nil
   end

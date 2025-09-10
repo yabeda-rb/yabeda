@@ -189,10 +189,13 @@ RSpec.describe Yabeda::DSL::ClassMethods do
   describe ".adapter" do
     context "when group is not defined" do
       it "raises an error" do
+        error_message = "Yabeda.adapter should be called either inside group declaration " \
+          "or should have block provided with a call to include_group. No metric group provided."
+
         expect do
           Yabeda.configure { adapter :test }
           Yabeda.configure! unless Yabeda.already_configured?
-        end.to raise_error(Yabeda::ConfigurationError, /can't be defined outside of group/)
+        end.to raise_error(Yabeda::ConfigurationError, error_message)
       end
     end
 
