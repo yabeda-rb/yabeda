@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.14.0 - 2025-09-10
+
+### Added
+
+- Allow to limit groups per adapter. [@killondark][] in [#41](https://github.com/yabeda-rb/yabeda/pull/41)
+
+  ```ruby
+  Yabeda.configure do
+    group :mushrooms do
+      counter :champignon_counter
+    end
+
+    adapter :basket_adapter do
+      include_group :mushrooms
+    end
+  end
+  ```
+
 ## 0.13.2 - 2025-09-09
 
 ### Fixed
@@ -196,3 +214,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [@bibendi]: https://github.com/bibendi "Misha Merkushin"
 [@Keallar]: https://github.com/Keallar "Eugene Lysanskiy"
 [@jbockler]: https://github.com/jbockler "Josch Bockler"
+[@killondark]: https://github.com/killondark "Alexander Marychev"
