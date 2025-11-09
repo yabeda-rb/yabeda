@@ -28,9 +28,9 @@ RSpec.describe Yabeda::Gauge do
   describe "#increment" do
     it "is threadsafe" do
       aggregate_failures do
-        threads = 20.times.map { Thread.new { 1000.times { gauge.increment({}, by: 1) && sleep(0.0001) } } }
+        threads = 20.times.map { Thread.new { 1000.times { gauge.increment(tags, by: 1) && sleep(0.0001) } } }
         threads.each(&:join)
-        expect(gauge.get({})).to eq(20_000)
+        expect(gauge.get(tags)).to eq(20_000)
       end
     end
 

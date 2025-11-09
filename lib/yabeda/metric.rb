@@ -17,14 +17,11 @@ module Yabeda
     # rubocop:disable Layout/LineLength
     option :adapter, optional: true, comment: "Monitoring system adapter to register metric in and report metric values to (other adapters won't be used)"
     # rubocop:enable Layout/LineLength
+    option :values, optional: true, default: proc { Concurrent::Hash.new }
 
     # Returns the value for the given label set
     def get(labels = {})
-      values[::Yabeda::Tags.build(labels, group)]
-    end
-
-    def values
-      @values ||= Concurrent::Hash.new
+      @values[::Yabeda::Tags.build(labels, group)]&.value
     end
 
     # Returns allowed tags for metric (with account for global and group-level +default_tags+)
@@ -61,6 +58,13 @@ module Yabeda
       return ::Yabeda.groups[group]&.adapter if @adapter == Dry::Initializer::UNDEFINED
 
       super
+    end
+
+    # Atomically increment the stored value, assumed to be given all labels, including group labels
+    # @api private
+    def increment_value(labels = {}, by: 1)
+      atomic_value = values[labels] ||= Concurrent::Atom.new(0)
+      atomic_value.swap { |prev| prev + by }
     end
   end
 end

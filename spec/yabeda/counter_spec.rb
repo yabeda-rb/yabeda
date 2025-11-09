@@ -19,7 +19,7 @@ RSpec.describe Yabeda::Counter do
   it { expect(increment_counter).to eq(metric_value) }
 
   it "increments counter with empty tags if tags are not provided" do
-    expect { counter.increment }.to change { counter.values[{}] }.by(1)
+    expect { counter.increment }.to change { counter.get({}) || 0 }.by(1)
   end
 
   it "execute perform_counter_increment!" do

@@ -5,7 +5,8 @@ module Yabeda
   class Gauge < Metric
     def set(tags, value)
       all_tags = ::Yabeda::Tags.build(tags, group)
-      values[all_tags] = value
+      atomic_value = values[all_tags] ||= Concurrent::Atom.new(0)
+      atomic_value.swap { |_| value }
       adapters.each_value do |adapter|
         adapter.perform_gauge_set!(self, all_tags, value)
       end
@@ -18,7 +19,12 @@ module Yabeda
     #   @param by [Integer] increment value
     def increment(*args)
       tags, by = Counter.parse_args(*args)
-      set(tags, get(tags).to_i + by)
+      all_tags = ::Yabeda::Tags.build(tags, group)
+      next_value = increment_value(all_tags, by: by)
+      adapters.each_value do |adapter|
+        adapter.perform_gauge_set!(self, all_tags, next_value)
+      end
+      next_value
     end
 
     # @overload decrement(tags = {}, by: 1)
@@ -27,7 +33,12 @@ module Yabeda
     #   @param by [Integer] decrement value
     def decrement(*args)
       tags, by = Counter.parse_args(*args)
-      set(tags, get(tags).to_i - by)
+      all_tags = ::Yabeda::Tags.build(tags, group)
+      next_value = increment_value(all_tags, by: -by)
+      adapters.each_value do |adapter|
+        adapter.perform_gauge_set!(self, all_tags, next_value)
+      end
+      next_value
     end
   end
 end
