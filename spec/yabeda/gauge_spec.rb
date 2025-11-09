@@ -26,6 +26,14 @@ RSpec.describe Yabeda::Gauge do
   end
 
   describe "#increment" do
+    it "is threadsafe" do
+      aggregate_failures do
+        threads = 20.times.map { Thread.new { 1000.times { gauge.increment({}, by: 1) && sleep(0.0001) } } }
+        threads.each(&:join)
+        expect(gauge.get({})).to eq(20_000)
+      end
+    end
+
     context "when gauge has no initial value" do
       before { gauge.increment(tags) }
 
@@ -51,6 +59,14 @@ RSpec.describe Yabeda::Gauge do
   end
 
   describe "#decrement" do
+    it "is threadsafe" do
+      aggregate_failures do
+        threads = 20.times.map { Thread.new { 1000.times { gauge.decrement(tags, by: 1) && sleep(0.0001) } } }
+        threads.each(&:join)
+        expect(gauge.get(tags)).to eq(-20_000)
+      end
+    end
+
     context "when gauge has no initial value" do
       before { gauge.decrement(tags) }
 

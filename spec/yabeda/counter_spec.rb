@@ -27,6 +27,14 @@ RSpec.describe Yabeda::Counter do
     expect(adapter).to have_received(:perform_counter_increment!).with(counter, tags, metric_value)
   end
 
+  it "is threadsafe" do
+    aggregate_failures do
+      threads = 20.times.map { Thread.new { 1000.times { counter.increment({}, by: 1) && sleep(0.0001) } } }
+      threads.each(&:join)
+      expect(counter.get({})).to eq(20_000)
+    end
+  end
+
   context "with adapter option" do
     let(:another_adapter) { instance_double(Yabeda::BaseAdapter, perform_counter_increment!: true, register!: true) }
     let(:counter) { Yabeda.counter_with_adapter }
