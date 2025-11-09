@@ -22,7 +22,9 @@ module Yabeda
       all_tags = ::Yabeda::Tags.build(tags, group)
       next_value = increment_value(all_tags, by: by)
       adapters.each_value do |adapter|
-        adapter.perform_gauge_set!(self, all_tags, next_value)
+        if adapter.perform_gauge_increment!(self, all_tags, by).nil?
+          adapter.perform_gauge_set!(self, all_tags, next_value)
+        end
       end
       next_value
     end
@@ -36,7 +38,9 @@ module Yabeda
       all_tags = ::Yabeda::Tags.build(tags, group)
       next_value = increment_value(all_tags, by: -by)
       adapters.each_value do |adapter|
-        adapter.perform_gauge_set!(self, all_tags, next_value)
+        if adapter.perform_gauge_increment!(self, all_tags, -by).nil?
+          adapter.perform_gauge_set!(self, all_tags, next_value)
+        end
       end
       next_value
     end
