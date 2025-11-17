@@ -7,7 +7,8 @@ RSpec.describe Yabeda::Gauge do
   let(:metric_value) { 10 }
   let(:gauge) { Yabeda.test_gauge }
   let(:built_tags) { { built_foo: "built_bar" } }
-  let(:adapter) { instance_double(Yabeda::BaseAdapter, perform_gauge_set!: true, register!: true) }
+  let(:implements_increment) { nil }
+  let(:adapter) { instance_double(Yabeda::BaseAdapter, perform_gauge_set!: true, perform_gauge_increment!: implements_increment, register!: true) }
 
   before do
     Yabeda.configure do
@@ -26,10 +27,28 @@ RSpec.describe Yabeda::Gauge do
   end
 
   describe "#increment" do
+    it "is threadsafe" do
+      aggregate_failures do
+        threads = 20.times.map { Thread.new { 1000.times { gauge.increment(tags, by: 1) && sleep(0.0001) } } }
+        threads.each(&:join)
+        expect(gauge.get(tags)).to eq(20_000)
+      end
+    end
+
+    context "when adapter implements perform_gauge_increment!" do
+      let(:implements_increment) { true }
+
+      before { gauge.increment(tags) }
+
+      it { expect(adapter).not_to have_received(:perform_gauge_set!).with(gauge, built_tags, 1) }
+      it { expect(adapter).to have_received(:perform_gauge_increment!).with(gauge, built_tags, 1) }
+    end
+
     context "when gauge has no initial value" do
       before { gauge.increment(tags) }
 
       it { expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, 1) }
+      it { expect(adapter).to have_received(:perform_gauge_increment!).with(gauge, built_tags, 1) }
     end
 
     context "when gauge has a value already" do
@@ -38,6 +57,7 @@ RSpec.describe Yabeda::Gauge do
         gauge.increment(tags)
       end
 
+      it { expect(adapter).to have_received(:perform_gauge_increment!).with(gauge, built_tags, 1) }
       it { expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value + 1) }
     end
 
@@ -45,15 +65,25 @@ RSpec.describe Yabeda::Gauge do
       it "increases by value of custom step" do
         set_gauge
         gauge.increment(tags, by: 42)
+        expect(adapter).to have_received(:perform_gauge_increment!).with(gauge, built_tags, 42)
         expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value + 42)
       end
     end
   end
 
   describe "#decrement" do
+    it "is threadsafe" do
+      aggregate_failures do
+        threads = 20.times.map { Thread.new { 1000.times { gauge.decrement(tags, by: 1) && sleep(0.0001) } } }
+        threads.each(&:join)
+        expect(gauge.get(tags)).to eq(-20_000)
+      end
+    end
+
     context "when gauge has no initial value" do
       before { gauge.decrement(tags) }
 
+      it { expect(adapter).to have_received(:perform_gauge_increment!).with(gauge, built_tags, -1) }
       it { expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, -1) }
     end
 
@@ -63,6 +93,7 @@ RSpec.describe Yabeda::Gauge do
         gauge.decrement(tags)
       end
 
+      it { expect(adapter).to have_received(:perform_gauge_increment!).with(gauge, built_tags, - 1) }
       it { expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value - 1) }
     end
 
@@ -70,7 +101,10 @@ RSpec.describe Yabeda::Gauge do
       it "decreases by value of custom step" do
         set_gauge
         gauge.decrement(tags, by: 42)
-        expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value - 42)
+        aggregate_failures do
+          expect(adapter).to have_received(:perform_gauge_set!).with(gauge, built_tags, metric_value - 42)
+          expect(adapter).to have_received(:perform_gauge_increment!).with(gauge, built_tags, - 42)
+        end
       end
     end
   end

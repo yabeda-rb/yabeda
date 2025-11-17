@@ -19,12 +19,20 @@ RSpec.describe Yabeda::Counter do
   it { expect(increment_counter).to eq(metric_value) }
 
   it "increments counter with empty tags if tags are not provided" do
-    expect { counter.increment }.to change { counter.values[{}] }.by(1)
+    expect { counter.increment }.to change { counter.get({}) || 0 }.by(1)
   end
 
   it "execute perform_counter_increment!" do
     increment_counter
     expect(adapter).to have_received(:perform_counter_increment!).with(counter, tags, metric_value)
+  end
+
+  it "is threadsafe" do
+    aggregate_failures do
+      threads = 20.times.map { Thread.new { 1000.times { counter.increment({}, by: 1) && sleep(0.0001) } } }
+      threads.each(&:join)
+      expect(counter.get({})).to eq(20_000)
+    end
   end
 
   context "with adapter option" do
