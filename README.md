@@ -159,6 +159,7 @@ These are developed and maintained by other awesome folks:
  - [yabeda-rack-ratelimit](https://github.com/basecamp/yabeda-rack-ratelimit) — metrics for [Rack::Ratelimit](https://github.com/jeremy/rack-ratelimit)
  - [yabeda-hanami](https://github.com/mlibrary/yabeda-hanami) — metrics for [Hanami](https://hanamirb.org/) The web, with simplicity.
  - [yabeda-jemalloc](http://github.com/jondavidschober/yabeda-jemalloc) - metrics for [Jemalloc](https://jemalloc.net/) via the `stats` FFI
+ - [yabeda-rack-queue](https://github.com/speedshop/yabeda-rack-queue) - metrics for reporting queue times of Rack applications.
  - _…and more! You can write your own adapter and open a pull request to add it into this list._
 
 ## Configuration
