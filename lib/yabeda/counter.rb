@@ -10,15 +10,11 @@ module Yabeda
     def increment(*args)
       tags, by = self.class.parse_args(*args)
       all_tags = ::Yabeda::Tags.build(tags, group)
-      values[all_tags] += by
+      value = increment_value(all_tags, by: by)
       adapters.each_value do |adapter|
         adapter.perform_counter_increment!(self, all_tags, by)
       end
-      values[all_tags]
-    end
-
-    def values
-      @values ||= Concurrent::Hash.new(0)
+      value
     end
 
     # @api private

@@ -29,6 +29,13 @@ module Yabeda
       raise NotImplementedError, "#{self.class} doesn't support setting gauges"
     end
 
+    # Optional method that adapters can implement for native gauge increment/decrement
+    def perform_gauge_increment!(_gauge, _tags, _increment)
+      # used to indicate adapter does not implement this method. return a non-nil value
+      # in your adapter to indicate it is supported
+      nil
+    end
+
     def register_histogram!(_metric)
       raise NotImplementedError, "#{self.class} doesn't support histograms as metric type!"
     end

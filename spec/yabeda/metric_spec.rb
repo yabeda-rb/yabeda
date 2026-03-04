@@ -11,7 +11,7 @@ RSpec.describe Yabeda::Metric do
     let(:tags) { { foo: "1", bar: "2" } }
 
     before do
-      metric.instance_variable_set(:@values, { tags => 42 })
+      metric.values[tags] = Concurrent::Atom.new(42)
     end
 
     it { is_expected.to eq(42) }
