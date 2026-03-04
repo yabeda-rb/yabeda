@@ -133,7 +133,7 @@ RSpec.describe "Yabeda RSpec matchers" do
     it "allows to pass histogram name instead of metric object" do
       expect do
         Yabeda.test_histogram.measure({}, 0.013)
-      end.to measure_yabeda_histogram(:test_histogram).with(0.01..0.02)
+      end.to measure_yabeda_histogram(:test_histogram).with(be_between(0.01, 0.02))
     end
 
     context "with expectations specified" do

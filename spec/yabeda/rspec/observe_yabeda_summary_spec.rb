@@ -133,7 +133,7 @@ RSpec.describe "Yabeda RSpec matchers" do
     it "allows to pass summary name instead of metric object" do
       expect do
         Yabeda.test_summary.observe({}, 0.013)
-      end.to observe_yabeda_summary(:test_summary).with(0.01..0.02)
+      end.to observe_yabeda_summary(:test_summary).with(be_between(0.01, 0.02))
     end
 
     context "with expectations specified" do
