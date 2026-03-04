@@ -3,7 +3,7 @@
 require "bundler/setup"
 require "yabeda"
 require "yabeda/base_adapter"
-require "pry"
+require "debug"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

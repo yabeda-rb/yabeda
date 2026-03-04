@@ -13,8 +13,7 @@ group :development, :test do
   gem "yard"
   gem "yard-dry-initializer"
 
-  gem "pry"
-  gem "pry-byebug", platform: :mri
+  gem "debug"
 
   gem "rubocop", "~> 1.0", require: false
   gem "rubocop-rspec", require: false
