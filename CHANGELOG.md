@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.15.0 - 2026-03-04
+
+### Fixed
+
+- Concurrency issues with metrics' increment/decrement helper methods. [@cconstantine-onesignal][] in [#45](https://github.com/yabeda-rb/yabeda/pull/45)
+
 ## 0.14.0 - 2025-09-10
 
 ### Added
@@ -215,3 +221,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [@Keallar]: https://github.com/Keallar "Eugene Lysanskiy"
 [@jbockler]: https://github.com/jbockler "Josch Bockler"
 [@killondark]: https://github.com/killondark "Alexander Marychev"
+[@cconstantine-onesignal]: https://github.com/cconstantine-onesignal "Chris Constantine"
