@@ -110,6 +110,26 @@ module Yabeda
       ensure @adapter_names = nil
       end
 
+      def only(*metric_names, group: @group)
+        if group
+          Yabeda.groups[group] ||= Yabeda::Group.new(group)
+          Yabeda.groups[group].only(*metric_names)
+        else
+          raise ConfigurationError, "Yabeda.only should be called either inside group declaration " \
+            "or should have group name provided. No metric group provided."
+        end
+      end
+
+      def except(*metric_names, group: @group)
+        if group
+          Yabeda.groups[group] ||= Yabeda::Group.new(group)
+          Yabeda.groups[group].except(*metric_names)
+        else
+          raise ConfigurationError, "Yabeda.except should be called either inside group declaration " \
+            "or should have group name provided. No metric group provided."
+        end
+      end
+
       def include_group(group)
         raise ConfigurationError, "Adapter limitation can't be defined without of group name" unless group
 

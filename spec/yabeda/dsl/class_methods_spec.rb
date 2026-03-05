@@ -214,4 +214,62 @@ RSpec.describe Yabeda::DSL::ClassMethods do
       end
     end
   end
+
+  describe ".only" do
+    context "when group is not defined" do
+      it "raises an error" do
+        error_message = "Yabeda.only should be called either inside group declaration " \
+          "or should have group name provided. No metric group provided."
+
+        expect do
+          Yabeda.configure { only :test }
+          Yabeda.configure! unless Yabeda.already_configured?
+        end.to raise_error(Yabeda::ConfigurationError, error_message)
+      end
+    end
+
+    context "with a specified group that does not exist" do
+      before do
+        Yabeda.configure { only :test, group: :adapter_group }
+        Yabeda.configure! unless Yabeda.already_configured?
+      end
+
+      it "creates the group" do
+        expect(Yabeda.groups[:adapter_group]).to be_a(Yabeda::Group)
+      end
+
+      it "defines the only list" do
+        expect(Yabeda.groups[:adapter_group].only).to eq(%i[test])
+      end
+    end
+  end
+
+  describe ".except" do
+    context "when group is not defined" do
+      it "raises an error" do
+        error_message = "Yabeda.except should be called either inside group declaration " \
+          "or should have group name provided. No metric group provided."
+
+        expect do
+          Yabeda.configure { except :test }
+          Yabeda.configure! unless Yabeda.already_configured?
+        end.to raise_error(Yabeda::ConfigurationError, error_message)
+      end
+    end
+
+    context "with a specified group that does not exist" do
+      before do
+        Yabeda.configure { except :test, group: :adapter_group }
+        Yabeda.configure! unless Yabeda.already_configured?
+      end
+
+      it "creates the group" do
+        expect(Yabeda.groups[:adapter_group]).to be_a(Yabeda::Group)
+      end
+
+      it "defines the except list" do
+        expect(Yabeda.groups[:adapter_group].except).to eq(%i[test])
+      end
+    end
+  end
 end

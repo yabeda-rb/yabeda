@@ -9,7 +9,7 @@ RSpec.describe Yabeda do
 
   it "exposes the public api" do
     expect(described_class.metrics).to eq({})
-    expect(described_class.adapters).to eq({})
+    expect(described_class.adapters).to eq({ null_adapter: ::Yabeda.adapters[:null_adapter] })
     expect(described_class.collectors).to eq([])
     expect(described_class.default_tags).to eq({})
     expect(described_class.configured?).to be(false)

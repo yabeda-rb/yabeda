@@ -3,6 +3,7 @@
 require "bundler/setup"
 require "yabeda"
 require "yabeda/base_adapter"
+require "yabeda/test_adapter"
 require "debug"
 
 RSpec.configure do |config|
