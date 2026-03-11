@@ -63,7 +63,7 @@ module Yabeda
 
       return group&.adapter if @adapter == Dry::Initializer::UNDEFINED
 
-      @adapter
+      super
     end
 
     # Atomically increment the stored value, assumed to be given all labels, including group labels
