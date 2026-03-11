@@ -12,6 +12,7 @@ require "yabeda/dsl/metric_builder"
 module Yabeda
   # DSL for ease of work with Yabeda
   module DSL
+    # rubocop:disable Metrics/ModuleLength
     module ClassMethods
       # Block for grouping and simplifying configuration of related metrics
       def configure(&block)
@@ -162,4 +163,5 @@ module Yabeda
       end
     end
   end
+  # rubocop:enable Metrics/ModuleLength
 end
