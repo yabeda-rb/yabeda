@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.16.0 - 2026-03-12
+
+### Added
+
+- Ability to include/exclude only certain metrics in a group for export via adapter. [@sobrinho][] in [#49](https://github.com/yabeda-rb/yabeda/pull/49)
+
+  ```ruby
+  Yabeda.configure do
+    group :internal do
+      only :foo
+    end
+  end
+  ```
+
+  To exclude certain metrics from a group, use the `except` option:
+
+  ```ruby
+  Yabeda.configure do
+    group :internal do
+      adapter :prometheus
+      except :bar, :baz
+    end
+  end
+  ```
+
 ## 0.15.0 - 2026-03-04
 
 ### Fixed
@@ -222,3 +247,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [@jbockler]: https://github.com/jbockler "Josch Bockler"
 [@killondark]: https://github.com/killondark "Alexander Marychev"
 [@cconstantine-onesignal]: https://github.com/cconstantine-onesignal "Chris Constantine"
+[@sobrinho]: https://github.com/sobrinho "Gabriel Sobrinho"
