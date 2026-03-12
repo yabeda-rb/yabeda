@@ -52,10 +52,16 @@ module Yabeda
       end
     end
 
-    # Redefined option reader to get group-level adapter if not set on metric level
-    # @api private
+    # Redefined option reader to get null adapter if metric is excluded from the group or from the only list in group,
+    # group-level adapter if not set on metric level, and adapter on metric level if set
+    # @api privatee
     def adapter
-      return ::Yabeda.groups[group]&.adapter if @adapter == Dry::Initializer::UNDEFINED
+      group = ::Yabeda.groups[self.group]
+
+      return :null_adapter if group&.except&.include?(name.to_sym) ||
+                              (group&.only && !group.only.include?(name.to_sym))
+
+      return group&.adapter if @adapter == Dry::Initializer::UNDEFINED
 
       super
     end

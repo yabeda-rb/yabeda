@@ -29,4 +29,28 @@ RSpec.describe Yabeda::Group do
       end
     end
   end
+
+  describe "only" do
+    it "appends to the only list" do
+      expect(group.only).to be_nil
+
+      group.only :metric1
+      expect(group.only).to eq(%i[metric1])
+
+      group.only :metric2
+      expect(group.only).to eq(%i[metric1 metric2])
+    end
+  end
+
+  describe "except" do
+    it "appends to the except list" do
+      expect(group.except).to be_nil
+      group.except :metric1
+
+      expect(group.except).to eq(%i[metric1])
+      group.except :metric2
+
+      expect(group.except).to eq(%i[metric1 metric2])
+    end
+  end
 end

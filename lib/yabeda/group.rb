@@ -26,6 +26,20 @@ module Yabeda
       @adapter.push(*adapter_names)
     end
 
+    def only(*metric_names)
+      return @only_list if metric_names.empty?
+
+      @only_list ||= Concurrent::Array.new
+      @only_list.push(*metric_names.map(&:to_sym))
+    end
+
+    def except(*metric_names)
+      return @except_list if metric_names.empty?
+
+      @except_list ||= Concurrent::Array.new
+      @except_list.push(*metric_names.map(&:to_sym))
+    end
+
     def register_metric(metric)
       define_singleton_method(metric.name) { metric }
     end

@@ -8,6 +8,7 @@ require "yabeda/config"
 require "yabeda/dsl"
 require "yabeda/tags"
 require "yabeda/errors"
+require "yabeda/null_adapter"
 
 # Extendable framework for collecting and exporting metrics from Ruby apps
 module Yabeda
@@ -32,7 +33,9 @@ module Yabeda
 
     # @return [Hash<Symbol, Yabeda::BaseAdapter>] All loaded adapters
     def adapters
-      @adapters ||= Concurrent::Hash.new
+      @adapters ||= Concurrent::Hash.new.tap do |hash|
+        hash[:null_adapter] = Yabeda::NullAdapter.new
+      end
     end
 
     # @return [Array<Proc>] All collectors for periodical retrieving of metrics
@@ -138,7 +141,7 @@ module Yabeda
     # @api private
     def reset!
       default_tags.clear
-      adapters.clear
+      @adapters = nil
       groups.each_key { |group| singleton_class.send(:remove_method, group) if group && respond_to?(group) }
       @groups = nil
       metrics.each_key { |metric| singleton_class.send(:remove_method, metric) if respond_to?(metric) }

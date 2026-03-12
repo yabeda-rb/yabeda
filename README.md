@@ -262,6 +262,53 @@ Yabeda.configure do
 end
 ```
 
+## Filtering metrics
+
+You can control which metrics and groups are exposed for a given group using either an allow-list (`only`) or a deny-list (`except`).
+
+To permit only specific metrics for a group, use the `only` option:
+
+```ruby
+Yabeda.configure do
+  group :internal do
+    only :foo
+
+    counter :foo
+    gauge :bar
+  end
+end
+```
+
+To exclude certain metrics from a group, use the `except` option:
+
+```ruby
+Yabeda.configure do
+  group :internal do
+    adapter :prometheus
+
+    except :bar
+
+    counter :foo
+    gauge :bar
+  end
+end
+```
+
+This mechanism is especially useful for disabling unwanted metrics from third-party plugins.
+
+For example, [yabeda-activerecord](https://github.com/yabeda-rb/yabeda-activerecord) doesn't provide its own configuration to turn off metrics with high cardinality, such as `queries_total` and `query_duration`. You can disable them like this:
+
+```ruby
+require 'yabeda'
+require 'yabeda-activerecord'
+
+Yabeda.configure do
+  group :activerecord do
+    except :queries_total, :query_duration
+  end
+end
+```
+
 ## Roadmap (aka TODO or Help wanted)
 
  - Ability to change metric settings for individual adapters

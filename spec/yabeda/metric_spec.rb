@@ -100,6 +100,46 @@ RSpec.describe Yabeda::Metric do
       end
     end
 
+    context "when metric is excluded from group" do
+      let(:options) { { group: :adapter_group } }
+
+      before do
+        Yabeda.configure do
+          group(:adapter_group) { except :some_metric }
+        end
+        Yabeda.configure! unless Yabeda.already_configured?
+      end
+
+      it "returns the null adapter" do
+        aggregate_failures do
+          expect(metric_adapters).to eq({
+                                          null_adapter: ::Yabeda.adapters[:null_adapter],
+                                        })
+          expect(metric_adapters.size).to eq(1)
+        end
+      end
+    end
+
+    context "when metric is included in group" do
+      let(:options) { { group: :adapter_group } }
+
+      before do
+        Yabeda.configure do
+          group(:adapter_group) { only :another_metric }
+        end
+        Yabeda.configure! unless Yabeda.already_configured?
+      end
+
+      it "returns the null adapter" do
+        aggregate_failures do
+          expect(metric_adapters).to eq({
+                                          null_adapter: ::Yabeda.adapters[:null_adapter],
+                                        })
+          expect(metric_adapters.size).to eq(1)
+        end
+      end
+    end
+
     context "when metric has no adapter option but group does" do
       let(:options) { { group: :adapter_group } }
 
