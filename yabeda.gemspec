@@ -18,7 +18,9 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/yabeda-rb/yabeda"
   spec.license       = "MIT"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
+  spec.metadata["rubygems_mfa_required"] = "true"
+
+  spec.files = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end
   spec.bindir        = "exe"
